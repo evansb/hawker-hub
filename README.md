@@ -14,13 +14,15 @@ You will need
 
 ## Installation
 
-  $ npm install -g gulp-cli coffee-script browserify
-  $ git clone https://github.com/cs3216-quake/hawker-hub
-  $ cd hawker-hub
-  $ npm install
-  $ gulp
-  $ # Open localhost:3000 to see the site, 3001 to see some controls and logs
-  $ gulp test # To run all the unit tests
+```
+$ npm install -g gulp-cli coffee-script browserify
+$ git clone https://github.com/cs3216-quake/hawker-hub
+$ cd hawker-hub
+$ npm install
+$ gulp
+$ # Open localhost:3000 to see the site, 3001 to see some controls and logs
+$ gulp test # To run all the unit tests
+```
 
 # License
 
