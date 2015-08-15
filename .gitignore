@@ -1,0 +1,9 @@
+
+# OSX
+.DS_Store
+
+# Project
+dist/
+js/
+js_test/
+node_modules/
