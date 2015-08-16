@@ -38,7 +38,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evansb/ibex.git"
+    "url": "git+https://github.com/cs3216-quake/hawker-hub.git"
   },
   "keywords": [
     "Food",
@@ -54,8 +54,10 @@
     "gulp-cjsx": "^3.0.0",
     "jquery": "^2.1.4",
     "lodash": "^3.10.1",
+    "material-ui": "^0.10.4",
     "merge2": "^0.3.6",
     "react": "^0.13.3",
+    "react-tap-event-plugin": "^0.1.7",
     "reflux": "^0.2.12"
   }
 }
