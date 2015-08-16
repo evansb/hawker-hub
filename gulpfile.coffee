@@ -97,5 +97,4 @@ gulp.task 'test', ['coffee', 'coffee_test'], (done) ->
   (new Server config, -> done()).start()
 
 gulp.task 'clean', -> del(['dist', 'js'])
-
 gulp.task 'default', ['sass', 'watch', 'browserify', 'browser-sync']
