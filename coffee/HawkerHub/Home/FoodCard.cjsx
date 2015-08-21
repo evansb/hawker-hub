@@ -14,7 +14,7 @@ FoodHeaderOverlay = React.createClass
       </Cell>
       <Cell size='1/6'>
         <Cell size='1/2'>
-          <Icon name="favorite_border" overrideColor="white"></Icon>
+          <Icon name="add" overrideColor="white"></Icon>
         </Cell>
         <Cell size='1/2'>
           <Icon name="more_vert" overrideColor="white"></Icon>
@@ -28,7 +28,7 @@ FoodHeader = React.createClass
     imageLoaded: false
   componentWillMount: ->
     # Fetch image Asynchronously
-    url = "http://lorempixel.com/600/337/nature/"
+    url = "http://lorempixel.com/#{ 500 + Math.floor(Math.random() * 40)}/337/food/"
     image = $("<img />").attr('src', url)
     image.load =>
       @setState { imageLoaded: true }
@@ -45,6 +45,6 @@ module.exports = React.createClass
   propTypes:
     headerOnly: React.PropTypes.bool
   render: ->
-    <UI.Card>
+    <UI.Card style={{background:"black"}}>
       <FoodHeader />
     </UI.Card>

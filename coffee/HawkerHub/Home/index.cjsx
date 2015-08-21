@@ -30,6 +30,7 @@ items = [
   { name: "Durian", location: "Your Mum's Home"}
   { name: "Apple", location: "Wait what"}
 ]
+
 module.exports = React.createClass
   mixins: [UITheme]
   tabStyle:

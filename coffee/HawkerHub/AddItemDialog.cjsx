@@ -7,7 +7,7 @@ UI         = require 'material-ui'
 CancelButton = React.createClass
   mixins: [UITheme]
   render: ->
-    <Icon name="close" onClick={@props.onClick}/>
+    <Icon name="close" onClick={@props.onClick} />
 
 CameraButton = React.createClass
   mixins: [UITheme]

@@ -27,7 +27,12 @@ module.exports = React.createClass
     activeFilter: () -> true
   render: ->
     items = _.map @props.items, (value, idx) ->
-      <UI.Paper zDepth={1} key={idx}><FoodCard /></UI.Paper>
+      <UI.Paper
+          style={{background: "black"}}
+          zDepth={1}
+          key={idx}>
+        <FoodCard headerOnly={true}/>
+      </UI.Paper>
     layouts =
       lg: DefaultLayout(items)
       md: DefaultLayout(items)
