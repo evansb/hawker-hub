@@ -51,13 +51,22 @@
   },
   "homepage": "https://github.com/cs3216-quake/hawker-hub",
   "dependencies": {
+    "ampersand-app": "^1.0.4",
+    "ampersand-model": "^5.0.3",
+    "ampersand-rest-collection": "^4.0.0",
     "gulp-cjsx": "^3.0.0",
     "jquery": "^2.1.4",
     "lodash": "^3.10.1",
     "material-ui": "^0.10.4",
     "merge2": "^0.3.6",
+    "purecss": "^0.6.0",
     "react": "^0.13.3",
+    "react-grid-layout": "^0.8.5",
+    "react-pure": "^0.3.1",
+    "react-retina-image": "^1.3.3",
+    "react-router": "^0.13.3",
     "react-tap-event-plugin": "^0.1.7",
+    "reactify": "^1.1.1",
     "reflux": "^0.2.12"
   }
 }

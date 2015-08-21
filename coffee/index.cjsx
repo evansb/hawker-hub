@@ -1,5 +1,12 @@
-React = require 'react'
-$     = require 'jquery'
-App   = require './app'
+$           = require 'jquery'
+HawkerHub   = require './HawkerHub'
 
-$(-> React.render <App />, document.getElementById('main'))
+# Inject React Tap Event
+injectTapEventPlugin = require 'react-tap-event-plugin'
+injectTapEventPlugin()
+
+# Load application entitites.
+require './Entity/App'
+
+# Render the main view.
+$(-> HawkerHub.render document.body)

@@ -76,16 +76,10 @@ gulp.task 'browserify', ['coffee', 'cjsx'], ->
     debug: false
   bundler = watchify (browserify config)
   rebundle = ->
-    base = bundler.bundle()
+    bundler.bundle()
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-    one = base
       .pipe(source 'hawker-hub.js')
       .pipe(buffer())
-      .pipe(uglify())
-    two = base
-      .pipe(source 'hawker-hub.js')
-      .pipe(buffer())
-    merge2(one, two)
       .pipe(gulp.dest './dist')
   bundler.on 'update', rebundle
   rebundle()
