@@ -162,13 +162,13 @@ HawkerHubLightTheme =
         backgroundColor: palette.canvasColor
       textField:
         textColor: palette.textColor
-        hintColor: palette.disabledColor
+        hintColor: Colors.grey300
         floatingLabelColor: palette.textColor
         disabledTextColor: palette.disabledColor
         errorColor: Colors.redA700
         focusColor: palette.primary1Color
         backgroundColor: 'transparent'
-        borderColor: palette.borderColor
+        borderColor: Colors.grey300
     obj.flatButton.disabledTextColor =
       ColorManipulator.fade(obj.flatButton.textColor, 0.3)
     obj.floatingActionButton.disabledColor =

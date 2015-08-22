@@ -1,6 +1,5 @@
 React      = require 'react'
 App        = require 'ampersand-app'
-{Cell}     = require 'react-pure'
 UI         = require 'material-ui'
 Image      = require 'react-retina-image'
 UITheme    = require './Common/UITheme'
@@ -15,36 +14,40 @@ menuItems = [
   { route: 'food-basket', text: 'Food Basket' }
 ]
 
-LeftNavToggle = React.createClass
+RightNavToggle = React.createClass
   render: ->
     <UI.IconButton onClick={@props.handleClick} iconClassName="material-icons">
       menu
     </UI.IconButton>
 
-AddItemButton = React.createClass
+LeftNavToggle = React.createClass
   propTypes:
-    onClick: React.PropTypes.func.isRequired
+    handleClick: React.PropTypes.func.isRequired
   render: ->
-    <Icon name="add" onClick={@props.handleClick}/>
+    <Icon name="add" onClick={@props.handleClick} />
 
 SearchBar = React.createClass
   render: ->
-    <UI.TextField hintText="Search for Menu, Stall, or People" />
+    <div className="search-bar">
+      <UI.TextField hintText="Search for Menu, Stall, or People" />
+    </div>
 
 module.exports = React.createClass
   mixins: [UITheme]
-  toggleLeftNav: -> @refs.leftNav.toggle()
-  showAddDialog: -> @refs.addDialog.show()
+  toggleLeftNav: -> @refs.addDialog.show()
   render: ->
-    Title =
-      <Cell className="title">
-        <SearchBar />
-      </Cell>
     <div>
-      <UI.LeftNav ref="leftNav" docked={false} menuItems={menuItems} />
       <AddItemDialog ref="addDialog" />
-      <UI.AppBar
-        title={Title}
-        iconElementLeft={<LeftNavToggle handleClick={@toggleLeftNav} />}
-        iconElementRight={ <Icon name="add" onClick={@showAddDialog} /> } />
+      <div className="row title">
+        <div className="two columns">
+          <div className="row">
+            <div className="two columns">
+              <LeftNavToggle handleClick={@toggleLeftNav} />
+            </div>
+            <div className="ten columns">
+              <SearchBar />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>

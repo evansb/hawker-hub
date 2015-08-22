@@ -3,48 +3,41 @@ UI          = require 'material-ui'
 UITheme     = require '../Common/UITheme'
 Icon        = require '../Common/MaterialIcon'
 $           = require 'jquery'
-{ Cell }    = require 'react-pure'
 
 FoodHeaderOverlay = React.createClass
   render: ->
-    <Cell>
-      <Cell size='5/6'>
-        <div className='food-card-title'>Title</div>
-        <div className='food-card-subtitle'>Subtitle</div>
-      </Cell>
-      <Cell size='1/6'>
-        <Cell size='1/2'>
-          <Icon name="add" overrideColor="white"></Icon>
-        </Cell>
-        <Cell size='1/2'>
-          <Icon name="more_vert" overrideColor="white"></Icon>
-        </Cell>
-      </Cell>
-    </Cell>
-
-FoodHeader = React.createClass
-  mixins: [UITheme]
-  getInitialState: ->
-    imageLoaded: false
-  componentWillMount: ->
-    # Fetch image Asynchronously
-    url = "http://lorempixel.com/#{ 500 + Math.floor(Math.random() * 40)}/337/food/"
-    image = $("<img />").attr('src', url)
-    image.load =>
-      @setState { imageLoaded: true }
-      $(React.findDOMNode(@refs.picture)).html image
-  render: ->
-    <UI.CardMedia overlay={<FoodHeaderOverlay />} className="food-card-image">
-      <div ref="picture">
-        { <UI.CircularProgress mode="indeterminate" /> unless @state.imageLoaded }
+    <div className='row'>
+      <div className='one column'>
+        <Icon name="add" overrideColor="white"></Icon>
       </div>
-    </UI.CardMedia>
+      <div className='nine columns'>
+        <strong className='food-card-title'>Title</strong>
+        <div className='food-card-subtitle'>Subtitle</div>
+      </div>
+      <div className='one column'>
+        <Icon name="more_vert" overrideColor="white"
+              onClick={@props.handleMoreClick}></Icon>
+      </div>
+    </div>
 
 module.exports = React.createClass
   mixins: [UITheme]
   propTypes:
-    headerOnly: React.PropTypes.bool
+    handleMoreClick: React.PropTypes.func.isRequired
+  getInitialState: ->
+    imageLoaded: false
+  componentWillMount: ->
+    url = "http://lorempixel.com/#{ 500 + Math.floor(Math.random() * 40)}/337/food/"
+    image = $("<img class='u-full-width u-max-full-width u-max-full-height' />")
+            .attr('src', url)
+    $(image).click => @props.handleMoreClick()
+    image.load =>
+      @setState { imageLoaded: true }
+      $(React.findDOMNode(@refs.picture)).append image
   render: ->
-    <UI.Card style={{background:"black"}}>
-      <FoodHeader />
-    </UI.Card>
+    overlay = <FoodHeaderOverlay handleMoreClick={@props.handleMoreClick} />
+    <UI.CardMedia overlay={overlay} className="food-card">
+      <div ref="picture" className="food-card-progress">
+        { <UI.CircularProgress mode="indeterminate" /> unless @state.imageLoaded }
+      </div>
+    </UI.CardMedia>

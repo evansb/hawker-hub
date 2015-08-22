@@ -1,9 +1,8 @@
-$      = require 'jquery'
-React  = require 'react'
-Router = require 'react-router'
-App    = require 'ampersand-app'
-{Cell} = require 'react-pure'
-
+$          = require 'jquery'
+React      = require 'react'
+Router     = require 'react-router'
+App        = require 'ampersand-app'
+Modal      = require 'react-modal'
 NavBar     = require './NavBar'
 Collection = require './Collection'
 Dashboard  = require './Dashboard'
@@ -17,9 +16,9 @@ HawkerHub = React.createClass
       <header>
         <NavBar title={App.title()} />
       </header>
-      <Cell className="container">
+      <div className="row">
         <RouteHandler />
-      </Cell>
+      </div>
     </div>
 
 routes =
@@ -33,4 +32,6 @@ routes =
 module.exports =
   render: (el) ->
     Router.run routes, (Handler) ->
+      Modal.setAppElement el
+      Modal.injectCSS()
       React.render <Handler />, el

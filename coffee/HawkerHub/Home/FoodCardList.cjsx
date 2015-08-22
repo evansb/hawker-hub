@@ -26,26 +26,22 @@ module.exports = React.createClass
     foods: []
     activeFilter: () -> true
   render: ->
-    items = _.map @props.items, (value, idx) ->
-      <UI.Paper
-          style={{background: "black"}}
-          zDepth={1}
-          key={idx}>
-        <FoodCard headerOnly={true}/>
+    items = _.map @props.items, (value, idx) =>
+      <UI.Paper zDepth={1} key={idx} className="food-card">
+        <FoodCard handleMoreClick={@props.handleMoreClick} />
       </UI.Paper>
     layouts =
       lg: DefaultLayout(items)
       md: DefaultLayout(items)
-      sm: MobileLayout(items)
+      sm: DefaultLayout(items)
       xs: MobileLayout(items)
       xxs: MobileLayout(items)
-    <Layout className="layout"
+    <Layout className="limit-width"
             onLayoutChange={->}
             isDraggable={false}
             layouts={layouts}
-            breakpoints={{lg:1200, md:996, sm: 768, xs: 480, xxs: 0}}
-            cols={{lg: 12, md: 12, sm: 1, xs: 1, xxs: 1}}
-            margin=[5,5]
-            rowHeight=350>
+            breakpoints={{lg:1200, md:996, sm: 768, xs: 400, xxs: 0}}
+            cols={{lg: 12, md: 12, sm: 8, xs: 1, xxs: 1}}
+            rowHeight={350}>
       {items}
     </Layout>

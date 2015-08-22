@@ -1,13 +1,21 @@
 
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500)
-@import ../node_modules/purecss/build/pure-min
-
-@import "food-card.sass"
-@import "add-dialog.sass"
+@import ../vendor/normalize
+@import ../vendor/skeleton
+@import food-card.sass
+@import food-card-detail.sass
+@import add-dialog.sass
 
 .title
   text-align: left
+  background: white
+
+.limit-width
+  max-width: 1440px
+  margin: 0 auto
+
+.u-max-full-height
+  height: 100%
 
 body
-  margin: 0 auto
-  background-color: #212121 
+  background-color: #212121
