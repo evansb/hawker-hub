@@ -1,5 +1,6 @@
 React      = require 'react'
 Modal      = require 'react-modal'
+Image      = require 'react-retina-image'
 UITheme    = require './Common/UITheme'
 Icon       = require './Common/MaterialIcon'
 UI         = require 'material-ui'
@@ -36,51 +37,42 @@ module.exports = React.createClass
     ]
   show: -> @setState { modalIsOpen: true }
   render: ->
-    <div className="row add-dialog">
-      <UI.Dialog ref="dialog" actions={@state.actions} modal={false}>
-          <div size='eight columns'>
-            <img src="../assets/upload_picture.png" width="100%" />
-            <CameraButton onTouchTap={@handleCancel} />
-            <FileUploadButton onTouchTap={@handleCancel} />
+    <Modal className="add-dialog"
+       isOpen = { @state.modalIsOpen }
+       onRequestClose = { @handleCancel }
+       ref="dialog" modal={false}>
+      <UI.Card>
+        <div className="row">
+          <div className='six columns'>
+            <div className="row upload-placeholder-container">
+              <Image className="u-max-full-width" src="../assets/empty-plates.png" />
+            </div>
+            <div className="row">
+              <CameraButton onTouchTap={@handleCancel} />
+              <FileUploadButton onTouchTap={@handleCancel} />
+            </div>
           </div>
-          <div size='four columns'>
+          <div className='six columns'>
             <div>
               <UI.TextField
-                  hintText="Food Name"
-                  floatingLabelText="Food Name" />
+                  hintText="Food Name" />
             </div>
             <div>
               <UI.TextField
-                  hintText="Stall Name"
-                  floatingLabelText="Stall Name" />
+                  hintText="Stall Name" />
+            </div>
+            <div>
+              <UI.TextField
+                  hintText="Description"
+                  multiLine={true} />
             </div>
             <div>
               <UI.CircularProgress mode="indeterminate" size={0.4} />
               <small>Detecting your location</small>
             </div>
           </div>
-
-      <ConfirmButton onClick={@handleCancel} />
-      <CancelButton onClick={@handleCancel} />,
-      </UI.Dialog>
-    </div>
-###
-    <Modal className="food-card-detail"
-       isOpen = { @state.modalIsOpen }
-       onRequestClose = { @handleCancel }
-       ref="dialog" modal={false}>
-      <UI.Card>
-          <div className="row">
-            <div className="six columns">
-              <Photo />
-              <Title />
-              <Description />
-              <Toolbar />
-            </div>
-            <div className="six columns food-card-detail-comments">
-              <Comments />
-            </div>
-          </div>
+          <ConfirmButton onClick={@handleCancel} />
+          <CancelButton onClick={@handleCancel} />
+        </div>
       </UI.Card>
     </Modal>
-###

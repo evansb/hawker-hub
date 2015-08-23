@@ -33,11 +33,11 @@ module.exports = React.createClass
     $(image).click => @props.handleMoreClick()
     image.load =>
       @setState { imageLoaded: true }
-      $(React.findDOMNode(@refs.picture)).append image
+      $(React.findDOMNode(@refs.picture)).html image
   render: ->
     overlay = <FoodHeaderOverlay handleMoreClick={@props.handleMoreClick} />
     <UI.CardMedia overlay={overlay} className="food-card">
       <div ref="picture" className="food-card-progress">
-        { <UI.CircularProgress mode="indeterminate" /> unless @state.imageLoaded }
+        <UI.LinearProgress className="food-card-progress-bar"/>
       </div>
     </UI.CardMedia>

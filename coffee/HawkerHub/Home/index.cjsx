@@ -42,13 +42,7 @@ module.exports = React.createClass
   render: ->
     <div>
     <FoodCardDetail ref="foodDetail" />
-    <UI.Tabs>
-      { _.map tabs, (value) =>
-        <UI.Tab key={value.key} label={value.label} style={@tabStyle} >
-          <FoodCardList className="limit-width"
-                        items={items}
-                        handleMoreClick={@handleMoreClick} />
-        </UI.Tab>
-      }
-    </UI.Tabs>
+    <FoodCardList className="limit-width"
+                  items={items}
+                  handleMoreClick={@handleMoreClick} />
     </div>

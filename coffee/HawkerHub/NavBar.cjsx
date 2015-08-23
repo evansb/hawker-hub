@@ -34,20 +34,25 @@ SearchBar = React.createClass
 
 module.exports = React.createClass
   mixins: [UITheme]
-  toggleLeftNav: -> @refs.addDialog.show()
+  toggleLeftNav: ->  @refs.addDialog.show()
   render: ->
     <div>
       <AddItemDialog ref="addDialog" />
       <div className="row title">
-        <div className="two columns">
-          <div className="row">
-            <div className="two columns">
-              <LeftNavToggle handleClick={@toggleLeftNav} />
-            </div>
-            <div className="ten columns">
-              <SearchBar />
-            </div>
-          </div>
+        <div className="one columns">
+          <LeftNavToggle handleClick={@toggleLeftNav} />
+        </div>
+        <div className="seven columns">
+          <SearchBar />
+        </div>
+        <div className="one column navbar-menu">
+          <UI.FlatButton label="Friends" />
+        </div>
+        <div className="one column navbar-menu">
+          <UI.FlatButton label="Nearby" />
+        </div>
+        <div className="one column navbar-menu">
+          <UI.FlatButton label="Activities" />
         </div>
       </div>
     </div>
