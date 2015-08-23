@@ -4,7 +4,6 @@ UI         = require 'material-ui'
 Image      = require 'react-retina-image'
 UITheme    = require './Common/UITheme'
 Icon       = require './Common/MaterialIcon'
-MenuBar    = require './MenuBar'
 AddItemDialog = require './AddItemDialog'
 
 menuItems = [
