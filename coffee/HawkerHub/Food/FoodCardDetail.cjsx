@@ -1,6 +1,5 @@
 React       = require 'react'
 UI          = require 'material-ui'
-Modal       = require 'react-modal'
 UITheme     = require '../Common/UITheme'
 Icon        = require '../Common/MaterialIcon'
 $           = require 'jquery'
@@ -11,9 +10,7 @@ Photo = React.createClass
     imageLoaded: false
   componentWillMount: ->
     # Fetch image Asynchronously
-    url = "http://lorempixel.com/#{ 500 + Math.floor(Math.random() * 40)}/337/food/"
-    image = $("<img class='u-full-width u-max-full-width u-max-full-height' />")
-            .attr('src', url)
+    image = $("<img class='u-full-width u-max-full-width' />").attr('src', @props.url)
     image.load =>
       @setState { imageLoaded: true }
       $(React.findDOMNode(@refs.picture)).html image
@@ -27,20 +24,12 @@ Photo = React.createClass
 Title = React.createClass
   mixins: [UITheme]
   render: ->
-    <UI.CardHeader
-        title="Food Name"
-        subtitle="Hawker Center Newton"
-        avatar="http://lorempixel.com/100/100/nature/"/>
+    <UI.CardHeader title={@props.text}
+       avatar="http://lorempixel.com/100/100/nature/"/>
 
 Description = React.createClass
   mixins: [UITheme]
-  render: ->
-    <UI.CardText>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-      Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-      Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-    </UI.CardText>
+  render: -> <UI.CardText> {@props.text} </UI.CardText>
 
 Toolbar = React.createClass
   mixins: [UITheme]
@@ -59,6 +48,7 @@ Comments = React.createClass
         <UI.ListItem
           key={0}
           leftAvatar={<UI.Avatar src="images/ok-128.jpg" />}
+          disabled={true}
           primaryText="Brendan Lim"
           secondaryText={
             <p>
@@ -69,23 +59,14 @@ Comments = React.createClass
           }
           secondaryTextLines={2} />
         <UI.ListItem
-          key={7}
+          className="food-card-detail-comments-box"
+          key={8}
           leftAvatar={<UI.Avatar src="images/ok-128.jpg" />}
-          primaryText="Brendan Lim"
           secondaryText={
-            <p>
-              <span>Brunch this weekend?</span><br/>
-              I&apos;ll be in your neighborhood doing errands this weekend.
-                Do you want to grab brunch?
-            </p>
+              <textarea></textarea>
           }
           secondaryTextLines={2} />
       </UI.List>
-      <UI.TextField
-        className="food-card-detail-comments-box"
-        hintText="Write something...."
-        multiLine={true} />
-      <UI.FlatButton label="Post" primary={true} />
     </div>
 
 module.exports = React.createClass
@@ -94,23 +75,17 @@ module.exports = React.createClass
     modalIsOpen: false
   handleSubmit: -> @setState { modalIsOpen: false}
   handleCancel: -> @setState { modalIsOpen: false}
-  show: -> @setState { modalIsOpen: true}
   render: ->
-    <Modal className="food-card-detail"
-       isOpen = { @state.modalIsOpen }
-       onRequestClose = { @handleCancel }
-       ref="dialog" modal={false}>
-      <UI.Card>
-          <div className="row">
-            <div className="six columns">
-              <Photo />
-              <Title />
-              <Description />
-              <Toolbar />
-            </div>
-            <div className="six columns food-card-detail-comments">
-              <Comments />
-            </div>
+    <UI.Card>
+        <div className="row">
+          <div className="six columns">
+            <Photo url={@props.model.photoURL}/>
+            <Title text={@props.model.itemName}/>
+            <Description text={@props.model.caption} />
+            <Toolbar />
           </div>
-      </UI.Card>
-    </Modal>
+          <div className="six columns food-card-detail-comments">
+            <Comments />
+          </div>
+        </div>
+    </UI.Card>
