@@ -48,9 +48,9 @@ HawkerHubLightTheme =
       dropDownMenu:
         accentColor: palette.borderColor
       flatButton:
-        color: palette.canvasColor
-        textColor: palette.textColor
-        primaryTextColor: palette.accent2Color
+        color: 'transparent'
+        textColor: palette.canvasColor
+        primaryTextColor: Colors.white
         secondaryTextColor: palette.primary1Color
       floatingActionButton:
         buttonSize: 56
@@ -161,14 +161,14 @@ HawkerHubLightTheme =
       tabs:
         backgroundColor: palette.canvasColor
       textField:
-        textColor: palette.textColor
+        textColor: Colors.black
         hintColor: Colors.grey300
         floatingLabelColor: palette.textColor
         disabledTextColor: palette.disabledColor
         errorColor: Colors.redA700
-        focusColor: palette.primary1Color
+        focusColor: palette.canvasColor
         backgroundColor: 'transparent'
-        borderColor: Colors.grey300
+        borderColor: palette.canvasColor
     obj.flatButton.disabledTextColor =
       ColorManipulator.fade(obj.flatButton.textColor, 0.3)
     obj.floatingActionButton.disabledColor =

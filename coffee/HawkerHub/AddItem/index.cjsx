@@ -1,9 +1,9 @@
 React      = require 'react'
 Modal      = require 'react-modal'
 Image      = require 'react-retina-image'
-UITheme    = require './Common/UITheme'
-Icon       = require './Common/MaterialIcon'
 UI         = require 'material-ui'
+UITheme    = require '../Common/UITheme'
+Icon       = require '../Common/MaterialIcon'
 
 CancelButton = React.createClass
   mixins: [UITheme]
@@ -42,37 +42,32 @@ module.exports = React.createClass
        onRequestClose = { @handleCancel }
        ref="dialog" modal={false}>
       <UI.Card>
+        <div className="row title">
+          <h3>Upload a New Item</h3>
+        </div>
         <div className="row">
           <div className='six columns'>
             <div className="row upload-placeholder-container">
               <Image className="u-max-full-width" src="../assets/empty-plates.png" />
             </div>
-            <div className="row">
-              <CameraButton onTouchTap={@handleCancel} />
-              <FileUploadButton onTouchTap={@handleCancel} />
-            </div>
           </div>
           <div className='six columns'>
             <div>
               <UI.TextField
+                  className="food-name"
                   hintText="Food Name" />
             </div>
             <div>
               <UI.TextField
-                  hintText="Stall Name" />
-            </div>
-            <div>
-              <UI.TextField
-                  hintText="Description"
+                  hintText="Caption"
                   multiLine={true} />
             </div>
-            <div>
-              <UI.CircularProgress mode="indeterminate" size={0.4} />
-              <small>Detecting your location</small>
-            </div>
           </div>
-          <ConfirmButton onClick={@handleCancel} />
-          <CancelButton onClick={@handleCancel} />
+        </div>
+        <div className="row buttons">
+          <CameraButton onTouchTap={@handleCancel} />
+          <FileUploadButton onTouchTap={@handleCancel} />
+          <ConfirmButton />
         </div>
       </UI.Card>
     </Modal>

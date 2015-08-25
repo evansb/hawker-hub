@@ -24,7 +24,7 @@ gulp.task 'browser-sync', ->
     server:
       baseDir: '.'
     watchOptions:
-      debounceDelay: 500
+      debounceDelay: 1000
 
 gulp.task 'sass', ->
   gulp.src('sass/**/*.sass')

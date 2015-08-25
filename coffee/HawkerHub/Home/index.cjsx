@@ -1,48 +1,41 @@
 _       = require 'lodash'
 React   = require 'react'
+Modal   = require 'react-modal'
 UI      = require 'material-ui'
 Colors  = require 'material-ui/lib/styles/colors'
 UITheme = require '../Common/UITheme'
-FoodCardList = require './FoodCardList'
-FoodCardDetail = require './FoodCardDetail'
-
-friendTab =
-  label: "Friends"
-  filter: -> true
-
-nearYouTab =
-  label: "Near You"
-  filter: -> true
-
-activities =
-  label: "Activities"
-  filter: -> true
-
-tabs = _.map [friendTab, nearYouTab, activities], (value, index) ->
-  value.key = index
-  value
-
-items = [
-  { name: "Durian", location: "Your Mum's Home"}
-  { name: "Apple", location: "Wait what"}
-  { name: "Durian", location: "Your Mum's Home"}
-  { name: "Apple", location: "Wait what"}
-  { name: "Apple", location: "Wait what"}
-  { name: "Durian", location: "Your Mum's Home"}
-  { name: "Apple", location: "Wait what"}
-  { name: "Apple", location: "Wait what"}
-]
+FoodCardList = require '../Food/FoodCardList'
+Filter = require '../../Entity/Filter'
+FoodCardDetail = require '../Food/FoodCardDetail'
+{ UserStore } = require '../../Entity/User'
 
 module.exports = React.createClass
   mixins: [UITheme]
-  tabStyle:
-    "color": Colors.red500
-  handleMoreClick: ->
-    @refs.foodDetail.show()
+  getInitialState: ->
+    modalIsOpen: false
+    modalModel: null
+    items: []
+    name: UserStore.getName() or 'My'
+  componentWillMount: ->
+    UserStore.listen (event) =>
+      if event.value? and event.value is 'connected'
+        @setState { name: UserStore.getName() }
+  handleMoreClick: (model) ->
+    @setState { modalIsOpen: true, modalModel: model }
+  handleCancel: -> @setState { modalIsOpen: false }
+  show: -> @setState { modalIsOpen: true}
   render: ->
     <div>
-    <FoodCardDetail ref="foodDetail" />
-    <FoodCardList className="limit-width"
-                  items={items}
-                  handleMoreClick={@handleMoreClick} />
+      <Modal className="food-card-detail"
+             isOpen = { @state.modalIsOpen }
+             onRequestClose = { @handleCancel}
+             ref="dialog" modal={false}>
+        <FoodCardDetail ref="foodDetail" model={@state.modalModel} />
+      </Modal>
+      <div className="row limit-width context-title">
+        <h2> {@state.name} Collection</h2>
+      </div>
+      <FoodCardList className="limit-width"
+                    fetch={Filter.Nearby}
+                    handleMoreClick={@handleMoreClick} />
     </div>

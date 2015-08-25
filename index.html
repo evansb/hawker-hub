@@ -1,38 +1,17 @@
-
-<!-- saved from url=(0055)file:///Users/evan/Downloads/Telegram%20Desktop/fb.html -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"></head><body>
-
-<p><a onclick="logInWithFacebook()">Log In with the JavaScript SDK</a></p>
-
-<script id="facebook-jssdk" src="http://connect.facebook.net/en_US/sdk.js"></script><script>
-  logInWithFacebook = function() {
-    FB.login(function(response) {
-      if (response.authResponse) {
-        alert('You are logged in & cookie set!');
-        // Now you can redirect the user or do an AJAX request to
-        // a PHP script that grabs the signed request from the cookie.
-      } else {
-        alert('User cancelled login or did not fully authorize.');
-      }
-    });
-    return false;
-  };
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId: '1466024120391100',
-      cookie: true, // This is important, it's not enabled by default
-      version: 'v2.4'
-    });
-  };
-
-  (function(d, s, id){
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement(s); js.id = id;
-    js.src = "http://connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-</script>
-
-
-After</body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HawkerHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <link rel="stylesheet" href="dist/hawker-hub.min.css">
+</head>
+<body>
+    <script>
+      window.API_HOST = 'hawkerhub.nusgreyhats.org';
+    </script>
+    <script src="dist/hawker-hub.js"></script>
+</body>
+</html>
