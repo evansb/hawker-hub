@@ -30,7 +30,7 @@ LogoutButton = React.createClass
   mixins: [UITheme]
   render: ->
     <div className="eleven columns">
-      <UI.FlatButton label="Logout" onClick={-> UserAction.logout()} />
+       <UI.FlatButton label={UserStore.getName()} onClick={-> UserAction.logout()} />
     </div>
 
 module.exports = React.createClass
@@ -47,7 +47,7 @@ module.exports = React.createClass
     <div className="navbar">
       <AddItemDialog ref="addDialog" />
       <div className="row title">
-        <div className="one columns">
+        <div className="one columns navbar-add">
           <LeftNavToggle handleClick={@toggleLeftNav} />
         </div>
         <div className="four columns navbar-search">
@@ -61,10 +61,9 @@ module.exports = React.createClass
           { if (@state.isLoggedIn is no)
               <UI.FlatButton label="Login with Facebook"
                          onClick={-> UserAction.login()} />
-            else if (@state.isLoggedIn is yes)
+            else if (@state.isLoggedIn is yes) 
               <LogoutButton />
-            else
-              <div></div> }
+            }
         </div>
       </div>
     </div>

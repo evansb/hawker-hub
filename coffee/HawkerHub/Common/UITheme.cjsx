@@ -161,7 +161,7 @@ HawkerHubLightTheme =
       tabs:
         backgroundColor: palette.canvasColor
       textField:
-        textColor: Colors.black
+        textColor: Colors.white
         hintColor: Colors.grey300
         floatingLabelColor: palette.textColor
         disabledTextColor: palette.disabledColor

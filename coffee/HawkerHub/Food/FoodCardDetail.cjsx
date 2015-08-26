@@ -3,6 +3,7 @@ UI          = require 'material-ui'
 UITheme     = require '../Common/UITheme'
 Icon        = require '../Common/MaterialIcon'
 $           = require 'jquery'
+{ UserStore, UserAction } = require '../../Entity/User'
 
 Photo = React.createClass
   mixins: [UITheme]
@@ -44,24 +45,11 @@ Comments = React.createClass
   mixins: [UITheme]
   render: ->
     <div>
-      <UI.List subheader="Comments (4)">
-        <UI.ListItem
-          key={0}
-          leftAvatar={<UI.Avatar src="images/ok-128.jpg" />}
-          disabled={true}
-          primaryText="Brendan Lim"
-          secondaryText={
-            <p>
-              <span>Brunch this weekend?</span><br/>
-              I&apos;ll be in your neighborhood doing errands this weekend.
-                Do you want to grab brunch?
-            </p>
-          }
-          secondaryTextLines={2} />
+      <UI.List subheader="Comments (0)">
         <UI.ListItem
           className="food-card-detail-comments-box"
           key={8}
-          leftAvatar={<UI.Avatar src="images/ok-128.jpg" />}
+          leftAvatar={<UI.Avatar src={UserStore.getProfilePicture} />}
           secondaryText={
               <textarea></textarea>
           }
