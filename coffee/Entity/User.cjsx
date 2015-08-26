@@ -20,16 +20,12 @@ UserStore = Reflux.createStore
   onLogin: (options) ->
     FB.getLoginStatus (response) =>
       if (response.status isnt 'connected') then FB.login()
-      @trigger { name: 'status', value: response.status }
-
-  onLogout: () ->
-    FB.logout()
-    @trigger { name: 'status', value: 'logged_out'}
-
-  onStatus: ->
-    FB.getLoginStatus (response) =>
-      User.isLoggedIn = response.status is 'connected'
-      url = "#{App.urlFor 'users'}/login"
+      url = App.urlFor 'users/login'
+      $.ajax
+        type: 'GET'
+        url: url
+        success: (data) =>
+          @trigger { name: 'status', value: response.status }
       FB.api '/me/?fields=id,name,picture', (response2) =>
         User.id = response2.id
         User.name = response2.name
@@ -37,6 +33,27 @@ UserStore = Reflux.createStore
         console.log(response2)
         @trigger { name: 'status', value: response.status }
 
-  onLogout: (options) ->
+  onLogout: () ->
+    FB.logout()
+    url = App.urlFor 'users/logout'
+    $.ajax
+      type: 'GET'
+      url: url
+      success: (data) =>
+        @trigger { name: 'status', value: 'logged_out' }
+
+  onStatus: ->
+    FB.getLoginStatus (response) =>
+      User.isLoggedIn = response.status is 'connected'
+      url = App.urlFor 'users/login'
+      $.ajax
+        type: 'GET'
+        url: url
+      FB.api '/me/?fields=id,name,picture', (response2) =>
+        User.id = response2.id
+        User.name = response2.name
+        User.profilePicture = response2.picture.url
+        console.log(response2)
+        @trigger { name: 'status', value: response.status }
 
 module.exports = { UserAction, UserStore }

@@ -33,7 +33,6 @@ module.exports = React.createClass
         <FoodCardDetail ref="foodDetail" model={@state.modalModel} />
       </Modal>
       <div className="row limit-width context-title">
-        <h2> {@state.name} Collection</h2>
       </div>
       <FoodCardList className="limit-width"
                     fetch={Filter.Nearby}
