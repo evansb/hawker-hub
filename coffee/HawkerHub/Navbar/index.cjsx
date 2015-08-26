@@ -26,10 +26,17 @@ SearchBar = React.createClass
       <UI.TextField hintText="Search HawkerHub" />
     </div>
 
+LoginButton = React.createClass
+  mixins: [UITheme]
+  render: ->
+    <div className="twelve columns">
+      <a class="login-button" href="">Login with Facebook</a>
+    </div>
+
 LogoutButton = React.createClass
   mixins: [UITheme]
   render: ->
-    <div className="eleven columns">
+    <div className="twelve columns">
        <UI.FlatButton label={UserStore.getName()} onClick={-> UserAction.logout()} />
     </div>
 
@@ -50,20 +57,22 @@ module.exports = React.createClass
         <div className="one columns navbar-add">
           <LeftNavToggle handleClick={@toggleLeftNav} />
         </div>
+        <div className="container">
         <div className="four columns navbar-search">
           <SearchBar />
         </div>
-        <div className="three columns navbar-menu">
-          <UI.FlatButton label="Me" />
-          <UI.FlatButton label="Nearby" />
+        <div className="four columns navbar-menu">
+            <UI.FlatButton label="Latest" />
+            <UI.FlatButton label="Nearby" />
         </div>
-        <div className="three columns navbar-user-status">
-          { if (@state.isLoggedIn is no)
-              <UI.FlatButton label="Login with Facebook"
-                         onClick={-> UserAction.login()} />
+        <div className="four columns navbar-user-status">
+          { 
+            if (@state.isLoggedIn is no)
+              <LoginButton />
             else if (@state.isLoggedIn is yes) 
               <LogoutButton />
-            }
+          }
+        </div>
         </div>
       </div>
     </div>
