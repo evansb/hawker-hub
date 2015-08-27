@@ -9,13 +9,12 @@ module.exports = React.createClass
   render: ->
     <div>
       <div className="row">
-        <UI.FlatButton label="Landing" />
         <UI.FlatButton label="Privacy" />
         <UI.FlatButton label="API" />  
         <UI.FlatButton label="About Us" />
       </div>
       <div className="row">
-          &copy; 2015 Proudly crafted by HawkerHub team <br/>
-          All rights reserved
+          &copy; 2015 Proudly crafted by the HawkerHub team.<br/>
+          All rights reserved.
       </div>
     </div>

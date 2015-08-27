@@ -32,9 +32,8 @@ module.exports = React.createClass
              ref="dialog" modal={false}>
         <FoodCardDetail ref="foodDetail" model={@state.modalModel} />
       </Modal>
-      <div className="row limit-width context-title">
-        <a href="#">Add an item</a>
-        <hr/>
+      <div style={{textAlign:'right'}} className="row limit-width context-title">
+        <UI.RaisedButton secondary={true} onClick={@props.onClick} label="Add an item" />
       </div>
       <FoodCardList className="limit-width"
                     fetch={Filter.Nearby}

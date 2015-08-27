@@ -36,8 +36,8 @@ LoginButton = React.createClass
 LogoutButton = React.createClass
   mixins: [UITheme]
   render: ->
-    <div className="twelve columns">
-       <UI.FlatButton label={UserStore.getName()} onClick={-> UserAction.logout()} />
+    <div className="twelve columns login-div">
+      <a className="login-button" onClick={-> UserAction.logout()}>{UserStore.getName()}</a>
     </div>
 
 module.exports = React.createClass

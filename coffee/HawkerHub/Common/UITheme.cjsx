@@ -9,13 +9,13 @@ HawkerHubLightTheme =
   spacing: Spacing
   contentFontFamily: "Helvetica Neue"
   getPalette: ->
-    primary1Color: Colors.red500
-    primary2Color: Colors.red700
-    primary3Color: Colors.red100
+    primary1Color: "rgb(185,43,39)"
+    primary2Color: Colors.red
+    primary3Color: Colors.red
     accent1Color: Colors.red100
-    accent2Color: Colors.redA400
-    accent3Color: Colors.redA100
-    textColor: Colors.white
+    accent2Color: Colors.white
+    accent3Color: Colors.white
+    textColor: Colors.red900
     canvasColor: "rgb(185,43,39)"
     borderColor: Colors.grey800
     disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3)
