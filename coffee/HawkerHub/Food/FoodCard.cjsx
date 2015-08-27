@@ -7,7 +7,7 @@ $           = require 'jquery'
 
 FoodHeaderOverlay = React.createClass
   render: ->
-    <div className='row food-card-title-row'>
+    <div className='row'>
       <strong className='food-card-title'>{@props.model.itemName}</strong>
     </div>
 

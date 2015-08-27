@@ -26,11 +26,18 @@ SearchBar = React.createClass
       <UI.TextField hintText="Search HawkerHub" />
     </div>
 
+LoginButton = React.createClass
+  mixins: [UITheme]
+  render: ->
+    <div className="twelve columns login-div">
+      <a className="login-button" onClick={-> UserAction.login()}>Login with Facebook</a>
+    </div>
+
 LogoutButton = React.createClass
   mixins: [UITheme]
   render: ->
-    <div className="eleven columns">
-       <UI.FlatButton label={UserStore.getName()} onClick={-> UserAction.logout()} />
+    <div className="twelve columns login-div">
+      <a className="login-button" onClick={-> UserAction.logout()}>{UserStore.getName()}</a>
     </div>
 
 module.exports = React.createClass
@@ -47,23 +54,34 @@ module.exports = React.createClass
     <div className="navbar">
       <AddItemDialog ref="addDialog" />
       <div className="row title">
-        <div className="one columns navbar-add">
-          <LeftNavToggle handleClick={@toggleLeftNav} />
-        </div>
+        <div className="container">
         <div className="four columns navbar-search">
           <SearchBar />
         </div>
-        <div className="three columns navbar-menu">
-          <UI.FlatButton label="Me" />
-          <UI.FlatButton label="Nearby" />
+        <div className="four columns navbar-menu">
+            <UI.Tabs style={{
+                height: '60px',
+                fontSize: '16px'
+            }}>
+              <UI.Tab label="Latest" style={{
+                height: '60px',
+                fontSize: '16px'
+
+            }}/>
+              <UI.Tab label="Nearby" style={{
+                height: '60px',
+                fontSize: '16px'
+            }}/>
+            </UI.Tabs>
         </div>
-        <div className="three columns navbar-user-status">
-          { if (@state.isLoggedIn is no)
-              <UI.FlatButton label="Login with Facebook"
-                         onClick={-> UserAction.login()} />
+        <div className="four columns navbar-user-status">
+          { 
+            if (@state.isLoggedIn is no)
+              <LoginButton />
             else if (@state.isLoggedIn is yes) 
               <LogoutButton />
-            }
+          }
+        </div>
         </div>
       </div>
     </div>
