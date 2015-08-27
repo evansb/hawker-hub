@@ -29,8 +29,8 @@ SearchBar = React.createClass
 LoginButton = React.createClass
   mixins: [UITheme]
   render: ->
-    <div className="twelve columns">
-      <a class="login-button" href="">Login with Facebook</a>
+    <div className="twelve columns login-div">
+      <a className="login-button" onClick={-> UserAction.login()}>Login with Facebook</a>
     </div>
 
 LogoutButton = React.createClass
@@ -54,16 +54,25 @@ module.exports = React.createClass
     <div className="navbar">
       <AddItemDialog ref="addDialog" />
       <div className="row title">
-        <div className="one columns navbar-add">
-          <LeftNavToggle handleClick={@toggleLeftNav} />
-        </div>
         <div className="container">
         <div className="four columns navbar-search">
           <SearchBar />
         </div>
         <div className="four columns navbar-menu">
-            <UI.FlatButton label="Latest" />
-            <UI.FlatButton label="Nearby" />
+            <UI.Tabs style={{
+                height: '60px',
+                fontSize: '16px'
+            }}>
+              <UI.Tab label="Latest" style={{
+                height: '60px',
+                fontSize: '16px'
+
+            }}/>
+              <UI.Tab label="Nearby" style={{
+                height: '60px',
+                fontSize: '16px'
+            }}/>
+            </UI.Tabs>
         </div>
         <div className="four columns navbar-user-status">
           { 

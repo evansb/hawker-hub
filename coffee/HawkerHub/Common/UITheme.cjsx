@@ -7,16 +7,16 @@ ColorManipulator = require 'material-ui/lib/utils/color-manipulator'
 
 HawkerHubLightTheme =
   spacing: Spacing
-  contentFontFamily: 'Roboto, sans-serif'
+  contentFontFamily: "Helvetica Neue"
   getPalette: ->
     primary1Color: Colors.red500
     primary2Color: Colors.red700
     primary3Color: Colors.red100
-    accent1Color: Colors.red500
+    accent1Color: Colors.red100
     accent2Color: Colors.redA400
     accent3Color: Colors.redA100
-    textColor: Colors.red500
-    canvasColor: Colors.white
+    textColor: Colors.white
+    canvasColor: "rgb(185,43,39)"
     borderColor: Colors.grey800
     disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3)
   getComponentThemes: (palette, spacing) ->
@@ -159,16 +159,18 @@ HawkerHubLightTheme =
         separatorColor: 'rgba(0, 0, 0, .175)'
         menuHoverColor: 'rgba(0, 0, 0, .10)'
       tabs:
-        backgroundColor: palette.canvasColor
+        color: Colors.white
+        backgroundColor: 'transparent'
+        activeColor: Colors.white
       textField:
         textColor: Colors.white
-        hintColor: Colors.grey300
+        hintColor: Colors.white
         floatingLabelColor: palette.textColor
         disabledTextColor: palette.disabledColor
         errorColor: Colors.redA700
-        focusColor: palette.canvasColor
+        focusColor: Colors.white
         backgroundColor: 'transparent'
-        borderColor: palette.canvasColor
+        borderColor: Colors.white
     obj.flatButton.disabledTextColor =
       ColorManipulator.fade(obj.flatButton.textColor, 0.3)
     obj.floatingActionButton.disabledColor =
