@@ -1,42 +1,43 @@
 
+.ReactModal__Overlay
+  background-color: rgba(0, 0, 0, 0.75) !important
+
+.ReactModal__Content
+  border: 0 !important
+  margin: 0 auto
+  max-width: 1024px
+
 .food-card
-  overflow: hidden
   text-align: left
   margin-top: 1em
-  background: #263238
-  cursor: pointer
-  cursor: hand
 
-.food-card > div > div > div > div
-  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.71) 100%) !important
+  .title
+    h1
+      font-size: 1.5em
+    small
+      font-size: 0.8em
+    line-height: 1em
+    background:  black
+    color: white
+    display: block
+    padding-left: 1em
+    padding-bottom: 1em
 
-.food-card-progress
-  height: 350px
-  vertical-align: middle
-  text-align: center
+  .comments
+    border-color: black
+    overflow-y: auto
 
-.food-card-progress-bar
-  position: absolute
-  bottom: 0px
+  .toolbar
+    text-align: right
 
-.food-card:hover .food-card-title-row
-  background-color: rgba(0,0,0,0.5)
-  display: block
-
-.food-card-title
-  letter-spacing: 0.08em
-  line-height: 2em
-  color: white
-  font-size: 1em
-  padding-left: 1em
-  padding-right: 1em
-  padding-bottom: 1em
-  display: block
-
-.food-card-subtitle
-  color: white
-
-.show-more
-  padding-top: 2em
-  text-align: center
-  padding-bottom: 2em
+  .comments-box
+    *
+      color: black !important
+    textarea
+      width: 90%
+      border-color: #dadada
+      border-radius: 0
+  img
+    display: block
+    margin-left: auto
+    margin-right: auto

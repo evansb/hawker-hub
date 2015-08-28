@@ -20,6 +20,8 @@ Food = Model.extend
     'longitude': 'string'
     'latitude': 'string'
     'userId': 'string'
+    'user': 'object'
+    'comments': 'any'
   derived:
     name: ->
       deps: ['itemName']

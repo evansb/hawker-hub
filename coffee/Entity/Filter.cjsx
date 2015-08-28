@@ -8,4 +8,4 @@ module.exports =
     FoodAction.fetch
       orderBy: 'location'
       startAt: startAt
-      limit: 9
+      limit: 3

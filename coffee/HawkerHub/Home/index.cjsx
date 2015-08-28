@@ -6,8 +6,22 @@ Colors  = require 'material-ui/lib/styles/colors'
 UITheme = require '../Common/UITheme'
 FoodCardList = require '../Food/FoodCardList'
 Filter = require '../../Entity/Filter'
-FoodCardDetail = require '../Food/FoodCardDetail'
+FoodCard = require '../Food/FoodCard'
 { UserStore } = require '../../Entity/User'
+
+
+AddButton = React.createClass
+  render: ->
+    child =
+      <div className="row button-content">
+        <div className="four columns button-icon">
+          <UI.FontIcon className="material-icons"> add </UI.FontIcon>
+        </div>
+        <div className="eight columns button-text">
+          Add Item
+        </div>
+      </div>
+    <UI.FlatButton secondary={true} children={child} />
 
 module.exports = React.createClass
   mixins: [UITheme]
@@ -25,17 +39,20 @@ module.exports = React.createClass
   handleCancel: -> @setState { modalIsOpen: false }
   show: -> @setState { modalIsOpen: true}
   render: ->
-    <div>
+    <div className="limit-width">
       <Modal className="food-card-detail"
              isOpen = { @state.modalIsOpen }
-             onRequestClose = { @handleCancel}
+             onRequestClose = { @handleCancel }
              ref="dialog" modal={false}>
-        <FoodCardDetail ref="foodDetail" model={@state.modalModel} />
+        <FoodCard ref="foodDetail" model={@state.modalModel} />
       </Modal>
-      <div style={{textAlign:'right'}} className="row limit-width context-title">
-        <UI.RaisedButton secondary={true} onClick={@props.onClick} label="Add an item" />
+      <div className="row context-bar">
+        <div className="ten columns">
+          <h1>Recent Items</h1>
+        </div>
+        <div className="two columns">
+          <AddButton />
+        </div>
       </div>
-      <FoodCardList className="limit-width"
-                    fetch={Filter.Nearby}
-                    handleMoreClick={@handleMoreClick} />
+      <FoodCardList fetch={Filter.Nearby} handleMoreClick={@handleMoreClick} />
     </div>
