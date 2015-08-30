@@ -2,7 +2,6 @@ $        = require 'jquery'
 _        = require 'lodash'
 React    = require 'react'
 Image    = require 'react-retina-image'
-Layout   = (require 'react-grid-layout').Responsive
 UI       = require 'material-ui'
 InfiniteScroll = (require 'react-infinite-scroll')(React)
 UITheme  = require '../Common/UITheme'

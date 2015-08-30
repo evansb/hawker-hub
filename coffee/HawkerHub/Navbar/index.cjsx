@@ -59,26 +59,16 @@ module.exports = React.createClass
           <SearchBar />
         </div>
         <div className="four columns navbar-menu">
-            <UI.Tabs style={{
-                height: '60px',
-                fontSize: '16px'
-            }}>
-              <UI.Tab label="Latest" style={{
-                height: '60px',
-                fontSize: '16px'
-
-            }}/>
-              <UI.Tab label="Nearby" style={{
-                height: '60px',
-                fontSize: '16px'
-            }}/>
-            </UI.Tabs>
+          <UI.Tabs>
+            <UI.Tab label="Latest" onActive={@props.latestTab} />
+            <UI.Tab label="Nearby" onActive={@props.nearbyTab}/>
+          </UI.Tabs>
         </div>
         <div className="four columns navbar-user-status">
-          { 
+          {
             if (@state.isLoggedIn is no)
               <LoginButton />
-            else if (@state.isLoggedIn is yes) 
+            else if (@state.isLoggedIn is yes)
               <LogoutButton />
           }
         </div>

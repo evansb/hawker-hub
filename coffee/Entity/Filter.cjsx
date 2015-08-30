@@ -2,10 +2,12 @@ App = require 'ampersand-app'
 { FoodAction } = require './Food'
 
 module.exports =
-  MyCollection: (startAt) ->
+  Recent:
+    heading: () -> "Recent Items"
+    fn: (startAt) ->
+      FoodAction.fetch { orderBy: 'date', startAt, limit: 3 }
 
-  Nearby: (startAt) ->
-    FoodAction.fetch
-      orderBy: 'location'
-      startAt: startAt
-      limit: 3
+  Nearby:
+    heading: () -> "Food Nearby"
+    fn: (startAt) ->
+      FoodAction.fetch { orderBy: 'location', startAt, limit: 3 }

@@ -7,6 +7,7 @@ UITheme = require '../Common/UITheme'
 FoodCardList = require '../Food/FoodCardList'
 Filter = require '../../Entity/Filter'
 FoodCard = require '../Food/FoodCard'
+AddItem = require '../AddItem'
 { UserStore } = require '../../Entity/User'
 
 
@@ -21,38 +22,29 @@ AddButton = React.createClass
           Add Item
         </div>
       </div>
-    <UI.FlatButton secondary={true} children={child} />
+    <UI.FlatButton
+          onClick={@props.onClick}
+          secondary={true} children={child} />
 
 module.exports = React.createClass
   mixins: [UITheme]
   getInitialState: ->
-    modalIsOpen: false
-    modalModel: null
-    items: []
-    name: UserStore.getName() or 'My'
+    activeFilter: Filter.Nearby
   componentWillMount: ->
     UserStore.listen (event) =>
       if event.value? and event.value is 'connected'
         @setState { name: UserStore.getName() }
-  handleMoreClick: (model) ->
-    @setState { modalIsOpen: true, modalModel: model }
-  handleCancel: -> @setState { modalIsOpen: false }
-  show: -> @setState { modalIsOpen: true}
+  handleAddItemClick: (model) -> @refs.addItem.show()
   render: ->
     <div className="limit-width">
-      <Modal className="food-card-detail"
-             isOpen = { @state.modalIsOpen }
-             onRequestClose = { @handleCancel }
-             ref="dialog" modal={false}>
-        <FoodCard ref="foodDetail" model={@state.modalModel} />
-      </Modal>
+      <AddItem ref="addItem" />
       <div className="row context-bar">
         <div className="ten columns">
-          <h1>Recent Items</h1>
+          <h1>{@state.activeFilter.heading()}</h1>
         </div>
         <div className="two columns">
-          <AddButton />
+          <AddButton onClick={@handleAddItemClick}/>
         </div>
       </div>
-      <FoodCardList fetch={Filter.Nearby} handleMoreClick={@handleMoreClick} />
+      <FoodCardList fetch={@state.activeFilter.fn} />
     </div>
