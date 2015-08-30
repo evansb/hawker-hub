@@ -27,6 +27,7 @@ UserStore = Reflux.createStore
   onLogin: (options) ->
     callback = (response) =>
       url = App.urlFor 'users/login'
+
       $.ajax
         type: 'GET'
         url: url

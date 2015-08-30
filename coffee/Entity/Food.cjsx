@@ -36,7 +36,6 @@ FoodStore = Reflux.createStore
   listenables: FoodAction
 
   onCreate: (options) ->
-    newFood = new Food options
     $.ajax
       type: 'POST'
       dataType: 'json'
@@ -44,6 +43,7 @@ FoodStore = Reflux.createStore
       crossOrigin: true
       url: App.urlFor 'item'
       success: (data) =>
+        newFood = new Food data
         foods.add newFood
         @trigger { name: 'created', value: newFood }
 
