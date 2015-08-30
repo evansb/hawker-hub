@@ -1,28 +1,50 @@
 
 .add-dialog
   text-align: left
-  max-width: 1024px
-  min-height: 400px
+
   .title
     padding: 1em
 
-  .food-name
+  .new-food
     border: none
-    color: #B92B27 !important
-    font-weight: bold
-    margin-left: 1em
-    font-size: 1.5em
-    width: 100%
+    border-radius: none
+    background: rgba(255,255,255, 0.1)
+    height: 2em
+    overflow: visible
+    text-shadow: 3px 4px 5px rgba(0,0,0,0.5)
+    margin-left: 0.5em
+    margin-right: 0.5em
+    font-size: 2em
+    line-height: 2em
 
-  .food-name:focus
-    border-color: #B92B27 !important
+  .toggle
+    position: absolute
+    bottom: 1em
+    left: 2em
+
+  .buttons
+    text-align: right
+    position: absolute
+    bottom: 1em
+    right: 2em
+
+  .new-food:focus
+    border: none
+    line-height: 2em
+
+  textarea
+    position: relative
+    border: rgba(0,0,0,0.05) solid 0.5px
+    width: 100%
+    resize: none
+
+  textarea:focus
+    border: rgba(0,0,0,0.05) solid 0.5px
 
   .right-column
     padding-top: 5em
     padding-right: 1em
-
-  .buttons
-    text-align: center
+    padding-bottom: 2em
 
   .upload-placeholder-container
     padding-top: 5%

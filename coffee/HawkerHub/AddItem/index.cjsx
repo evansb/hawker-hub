@@ -6,60 +6,43 @@ UITheme    = require '../Common/UITheme'
 Icon       = require '../Common/MaterialIcon'
 TextArea   = require 'react-textarea-autosize'
 
-CancelButton = React.createClass
-  mixins: [UITheme]
-  render: ->
-    <Icon name="close" onClick={@props.onClick} />
-
-CameraButton = React.createClass
-  mixins: [UITheme]
-  render: ->
-    <Icon name="photo_camera" onClick={@props.onClick} overrideColor="grey" />
-
-FileUploadButton = React.createClass
-  mixins: [UITheme]
-  render: ->
-    <Icon name="cloud_upload" onClick={@props.onClick} overrideColor="grey" />
-
 ConfirmButton = React.createClass
   mixins: [UITheme]
   render: ->
-    <Icon name="check" onClick={@props.onClick}overrideColor="green" />
+    <Icon name="check" onClick={@props.onClick} overrideColor="green" />
 
 UploadToFB = React.createClass
   mixins: [UITheme]
   render: ->
-    <UI.Checkbox name="upload_fb" value="upload_fb" label="Share on Facebook"/>
+    <UI.Checkbox name="upload_fb" value="upload_fb" label="Share"/>
 
 module.exports = React.createClass
   mixins: [UITheme]
-  handleSubmit: -> @setState { modalIsOpen: false }
-  handleCancel: -> @setState { modalIsOpen: false }
-  getInitialState: ->
-    modalIsOpen: false
-    actions: [
-      <ConfirmButton onClick={@handleCancel} />
-      <CancelButton onClick={@handleCancel} />,
-    ]
-  show: -> @setState { modalIsOpen: true }
   render: ->
-    <UI.Card className="add-dialog">
+    <UI.Card className="food-card add-dialog">
       <div className="row">
         <div className='six columns left-column'>
           <div className="row upload-placeholder-container">
             <Image className="u-max-full-width" src="../assets/empty-plates.png" />
           </div>
-          <div className="row">  
-            <input type='text' className='food-name' placeholder='Food Name' />
+          <div className="row">
+            <div className="overlay">
+              <input type="text" className="new-food" placeholder="Food Name..."/>
+            </div>
           </div>
         </div>
         <div className='six columns right-column'>
-          <TextArea placeholder='Describe more about this menu...' minRows={3} ></TextArea>
-          <div className="row buttons">
-            <div className="six columns">
-              <UploadToFB />
+          <TextArea placeholder='Describe more about this menu...' minRows={3} >
+          </TextArea>
+          <div className="row">
+            <div className="eight columns toggle">
+              <UI.Toggle name="upload_fb" value="upload_fb"
+                         labelPosition="right"
+                         label="Share to Facebook"/>
             </div>
-            <ConfirmButton onTouchTap={@handleCancel} />
+            <div className="four columns buttons">
+              <UI.FlatButton label="Post" />
+            </div>
           </div>
         </div>
       </div>
