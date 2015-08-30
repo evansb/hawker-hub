@@ -18,14 +18,18 @@ UserStore = Reflux.createStore
   getProfilePicture: -> User.profilePicture
 
   onLogin: (options) ->
-    FB.getLoginStatus (response) =>
-      if (response.status isnt 'connected') then FB.login()
+    callback = (response) =>
+      @trigger { name: 'status', value: response.status }
       url = App.urlFor 'users/login'
       $.ajax
         type: 'GET'
         url: url
         success: (data) =>
           @trigger { name: 'status', value: response.status }
+
+    FB.login callback,
+      scope: 'publish_actions,friends'
+      return_scopes: true
 
   onLogout: () ->
     FB.logout()
