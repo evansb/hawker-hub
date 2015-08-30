@@ -3,14 +3,6 @@
 
 $min-height: 400px
 
-.ReactModal__Overlay
-  background-color: rgba(0, 0, 0, 0.75) !important
-
-.ReactModal__Content
-  border: 0 !important
-  margin: 0 auto
-  max-width: 1024px
-
 .food-card
   text-align: left
   margin-top: 1em
@@ -30,34 +22,23 @@ $min-height: 400px
     padding-right: 1em
 
   .left-column
-    white-space: nowrap
     background: black
 
-    .helper
-      display: inline-block
-      height: 100%
-      vertical-align: middle
     img
-      background: black
-      vertical-align: middle
       min-height: 300px
 
-  .photo > div > div > div > div
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 0% , rgba(0,0,0,0.7) 70%, rgba(0,0,0,0.8) 100%) !important
-    color: white
-    line-height: 1em
+  .overlay
     h1
-      font-size: 2em
-    small
-      font-size: 0.8em
-    img
-      width: 100%
-      background: black
-    .overlay
-      position: absolute
-      width: 100%
-      bottom: 1em
-      left: 1em
+      text-shadow: 3px 4px 5px rgba(0,0,0,0.5)
+      padding-left: 0.5em
+      font-size: 2.5em
+    color: white
+    position: absolute
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0% , rgba(0,0,0,0.7) 70%, rgba(0,0,0,0.8) 100%) !important
+    width: 100%
+    z-index: 100
+    bottom: 0
+    left: 0
 
   textarea
     border: none

@@ -29,22 +29,24 @@ AddButton = React.createClass
 module.exports = React.createClass
   mixins: [UITheme]
   getInitialState: ->
+    addItemShown: false
     activeFilter: Filter.Nearby
   componentWillMount: ->
     UserStore.listen (event) =>
       if event.value? and event.value is 'connected'
         @setState { name: UserStore.getName() }
-  handleAddItemClick: (model) -> @refs.addItem.show()
+  showAddItem: (self) -> -> self.setState { addItemShown: true }
+  hideAddItem: (self) -> -> self.setState { addItemShown: false }
   render: ->
     <div className="limit-width">
-      <AddItem ref="addItem" />
       <div className="row context-bar">
         <div className="ten columns">
           <h1>{@state.activeFilter.heading()}</h1>
         </div>
         <div className="two columns">
-          <AddButton onClick={@handleAddItemClick}/>
+          <AddButton onClick={@showAddItem(this)}/>
         </div>
       </div>
+      { if (@state.addItemShown) then <AddItem ref="addItem" /> }
       <FoodCardList fetch={@state.activeFilter.fn} />
     </div>

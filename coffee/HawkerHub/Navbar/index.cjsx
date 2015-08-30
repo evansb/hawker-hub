@@ -2,7 +2,6 @@ React         = require 'react'
 App           = require 'ampersand-app'
 UI            = require 'material-ui'
 Image         = require 'react-retina-image'
-AddItemDialog = require '../AddItem'
 UITheme       = require '../Common/UITheme'
 Icon          = require '../Common/MaterialIcon'
 { UserStore, UserAction } = require '../../Entity/User'
@@ -52,7 +51,6 @@ module.exports = React.createClass
           @setState { isLoggedIn: event.value is 'connected' }
   render: ->
     <div className="navbar">
-      <AddItemDialog ref="addDialog" />
       <div className="row title">
         <div className="container">
         <div className="four columns navbar-search">

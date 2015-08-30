@@ -8,7 +8,9 @@ require './Entity/Facebook'
 injectTapEventPlugin = require 'react-tap-event-plugin'
 injectTapEventPlugin()
 
-# Install Infinite Scroll addon
+# Install Imagefit JQuery plugin
+window['jQuery'] = $
+require '../vendor/jquery.imagefit.min'
 
 # Load application entitity.
 require './Entity/App'

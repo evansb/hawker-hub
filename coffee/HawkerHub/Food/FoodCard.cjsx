@@ -13,14 +13,17 @@ Overlay = React.createClass
   render: -> <h1>{@props.text}</h1>
 
 Photo = React.createClass
+  style:
+    'background-image': "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))"
   render: ->
-    <div className="photo">
-      <span className="helper"></span>
-      <UI.CardMedia overlay={<Overlay text={@props.title} className="overlay" />}>
-        <img className="u-full-width u-max-full-width"
-            src={@props.src} />
-      </UI.CardMedia>
-    </div>
+     <div>
+       <div className="photo">
+         <img className="u-full-width" src={@props.src} />
+       </div>
+       <div className="overlay">
+        <Overlay text={@props.title} />
+       </div>
+     </div>
 
 InfoHeader = React.createClass
   render: ->
@@ -83,11 +86,17 @@ module.exports = React.createClass
     modalIsOpen: false
   handleSubmit: -> @setState { modalIsOpen: false}
   handleCancel: -> @setState { modalIsOpen: false}
+  componentDidMount: ->
+    $(React.findDOMNode(@refs.left)).imagefit
+      mode: 'outside'
+      force: 'true'
+      halign: 'center'
+      valign: 'middle'
   render: ->
     authorId = @props.model.user.providerUserId
     authorPicture = "https://graph.facebook.com/v2.4/#{authorId}/picture"
     <UI.Paper zDepth={1} className="row food-card">
-      <div className="six columns left-column">
+      <div ref="left" className="six columns left-column">
         <Photo title={@props.model.itemName} src={@props.model.photoURL} />
       </div>
       <div className="six columns right-column">

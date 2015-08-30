@@ -4,6 +4,7 @@ Image      = require 'react-retina-image'
 UI         = require 'material-ui'
 UITheme    = require '../Common/UITheme'
 Icon       = require '../Common/MaterialIcon'
+TextArea   = require 'react-textarea-autosize'
 
 CancelButton = React.createClass
   mixins: [UITheme]
@@ -25,6 +26,11 @@ ConfirmButton = React.createClass
   render: ->
     <Icon name="check" onClick={@props.onClick}overrideColor="green" />
 
+UploadToFB = React.createClass
+  mixins: [UITheme]
+  render: ->
+    <UI.Checkbox name="upload_fb" value="upload_fb" label="Share on Facebook"/>
+
 module.exports = React.createClass
   mixins: [UITheme]
   handleSubmit: -> @setState { modalIsOpen: false }
@@ -37,37 +43,24 @@ module.exports = React.createClass
     ]
   show: -> @setState { modalIsOpen: true }
   render: ->
-    <Modal className="add-dialog"
-       isOpen = { @state.modalIsOpen }
-       onRequestClose = { @handleCancel }
-       ref="dialog" modal={false}>
-      <UI.Card>
-        <div className="row title">
-          <h3>Upload a New Item</h3>
-        </div>
-        <div className="row">
-          <div className='six columns'>
-            <div className="row upload-placeholder-container">
-              <Image className="u-max-full-width" src="../assets/empty-plates.png" />
-            </div>
+    <UI.Card className="add-dialog">
+      <div className="row">
+        <div className='six columns left-column'>
+          <div className="row upload-placeholder-container">
+            <Image className="u-max-full-width" src="../assets/empty-plates.png" />
           </div>
-          <div className='six columns'>
-            <div>
-              <UI.TextField
-                  className="food-name"
-                  hintText="Food Name" />
-            </div>
-            <div>
-              <UI.TextField
-                  hintText="Caption"
-                  multiLine={true} />
-            </div>
+          <div className="row">  
+            <input type='text' className='food-name' placeholder='Food Name' />
           </div>
         </div>
-        <div className="row buttons">
-          <CameraButton onTouchTap={@handleCancel} />
-          <FileUploadButton onTouchTap={@handleCancel} />
-          <ConfirmButton />
+        <div className='six columns right-column'>
+          <TextArea placeholder='Describe more about this menu...' minRows={3} ></TextArea>
+          <div className="row buttons">
+            <div className="six columns">
+              <UploadToFB />
+            </div>
+            <ConfirmButton onTouchTap={@handleCancel} />
+          </div>
         </div>
-      </UI.Card>
-    </Modal>
+      </div>
+    </UI.Card>
