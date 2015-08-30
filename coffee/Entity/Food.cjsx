@@ -18,8 +18,9 @@ Food = Model.extend
     'itemName': 'string'
     'photoURL': 'string'
     'caption': 'string'
-    'longitude': 'string'
-    'latitude': 'string'
+    'longitude': 'any'
+    'longtitude': 'any'
+    'latitude': 'any'
     'userId': 'string'
     'user': 'object'
     'comments': 'any'
@@ -36,16 +37,21 @@ FoodStore = Reflux.createStore
 
   onCreate: (options) ->
     newFood = new Food options
-    newFood.save()
-    foods.add newFood
-    @trigger { name: 'created', value: newFood }
+    $.ajax
+      type: 'POST'
+      dataType: 'json'
+      data: options
+      crossOrigin: true
+      url: App.urlFor 'item'
+      success: (data) =>
+        foods.add newFood
+        @trigger { name: 'created', value: newFood }
 
   onFetch: (options) ->
     { orderBy, limit, startAt } = options
     if (foods.length < (startAt + limit))
       App.withLocation (latitude, longitude) =>
         url = App.urlFor 'item', {orderBy, limit, startAt, latitude, longitude}
-        console.log url
         $.ajax
           type: 'GET'
           dataType: 'json'
