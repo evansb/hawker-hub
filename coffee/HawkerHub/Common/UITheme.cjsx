@@ -7,7 +7,7 @@ ColorManipulator = require 'material-ui/lib/utils/color-manipulator'
 
 HawkerHubLightTheme =
   spacing: Spacing
-  contentFontFamily: "Helvetica Neue"
+  contentFontFamily: "GillSansMT"
   getPalette: ->
     primary1Color: "rgb(185,43,39)"
     primary2Color: Colors.red

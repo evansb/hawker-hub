@@ -2,23 +2,24 @@ $        = require 'jquery'
 _        = require 'lodash'
 React    = require 'react'
 Image    = require 'react-retina-image'
-Layout   = (require 'react-grid-layout').Responsive
 UI       = require 'material-ui'
 InfiniteScroll = (require 'react-infinite-scroll')(React)
 UITheme  = require '../Common/UITheme'
+Icon     = require '../Common/MaterialIcon'
 FoodCard = require './FoodCard'
 { FoodAction, FoodStore } = require '../../Entity/Food'
+{ Filter, FilterStore } = require '../../Entity/Filter'
 
 ShowMore = React.createClass
   render: ->
     <div className="show-more">
-      <UI.RaisedButton secondary={true} onClick={@props.onClick} label="Show More" />
+      <Icon onClick={@props.onClick} name="expand_more" />
     </div>
 
 ProgressBar = React.createClass
   render: ->
     <div className="loading-spinner">
-      <UI.CircularProgress mode="indeterminate" size={2} />
+      <img src="../../../../assets/food_loading@2x.gif" />
     </div>
 
 module.exports = React.createClass
@@ -26,29 +27,33 @@ module.exports = React.createClass
   getInitialState: ->
     items: []
     isInfiniteLoading: false
+    firstTimeFetch: true
+    activeFilter: Filter.Latest
   componentWillMount: ->
+    FilterStore.listen (newFilter) =>  
+      @fetchInit newFilter
+      @setState
+        firstTimeFetch: true
+        activeFilter: newFilter
+        items: []
+        isInfiniteLoading: false
     FoodStore.listen (event) =>
       switch event.name
         when 'fetched'
           items = @state.items.concat event.value
-          @setState { items }
+          @setState { firstTimeFetch: false, items }
+  fetch: -> @state.activeFilter.fn @state.items.length
+  fetchInit: (useFilter) ->
+    if (useFilter) then useFilter.init() else @state.activeFilter.init()
   handleInfiniteLoad: ->
-    if @state.isInfiniteLoading
-      @props.fetch(@state.items.length)
-  componentDidMount: ->
-    @props.fetch(@state.items.length)
+    if (@state.isInfiniteLoading) then @fetch()
+  componentDidMount: -> @fetchInit()
   render: ->
-    items = _.map (_.chunk @state.items, 3), (threes, pidx) =>
-      <div className="row">
-        { _.map threes, (value, idx) =>
-            <div className="four columns">
-              <FoodCard key={pidx * 3 + idx}
-                        model={value}
-                        handleMoreClick={@props.handleMoreClick} />
-            </div> }
-      </div>
+    items = _.map @state.items, (value, idx) =>
+      <FoodCard key={idx} model={value}
+                handleMoreClick={@props.handleMoreClick} />
     loader =
-      if @state.isInfiniteLoading
+      if (@state.isInfiniteLoading || @state.firstTimeFetch)
         <ProgressBar />
       else
         <ShowMore onClick={=> @setState { isInfiniteLoading: true} }/>

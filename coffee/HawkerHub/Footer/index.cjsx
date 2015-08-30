@@ -10,7 +10,7 @@ module.exports = React.createClass
     <div>
       <div className="row">
         <UI.FlatButton label="Privacy" />
-        <UI.FlatButton label="API" />  
+        <UI.FlatButton label="API" />
         <UI.FlatButton label="About Us" />
       </div>
       <div className="row">
