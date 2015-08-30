@@ -17,18 +17,23 @@ UserStore = Reflux.createStore
   getName: -> User.name
   getProfilePicture: -> User.profilePicture
 
+  fetchUserInfo: ->
+    FB.api '/me/?fields=id,name,picture', (response2) =>
+      User.id = response2.id
+      User.name = response2.name
+      User.profilePicture = response2.picture.data.url
+      @trigger { name: 'status', value: 'connected' }
+
   onLogin: (options) ->
     callback = (response) =>
-      @trigger { name: 'status', value: response.status }
       url = App.urlFor 'users/login'
+
       $.ajax
         type: 'GET'
         url: url
-        success: (data) =>
-          @trigger { name: 'status', value: response.status }
-
+        success: => @fetchUserInfo()
     FB.login callback,
-      scope: 'publish_actions,friends'
+      scope: 'publish_actions,user_friends'
       return_scopes: true
 
   onLogout: () ->
@@ -43,11 +48,8 @@ UserStore = Reflux.createStore
   onStatus: ->
     FB.getLoginStatus (response) =>
       User.isLoggedIn = response.status is 'connected'
-      if (response.status is 'connected')
-        FB.api '/me/?fields=id,name,picture', (response2) =>
-          User.id = response2.id
-          User.name = response2.name
-          User.profilePicture = response2.picture.data.url
-          @trigger { name: 'status', value: response.status }
+      url = App.urlFor 'users/login'
+      $.ajax { type: 'GET', url: url }
+      @fetchUserInfo() if User.isLoggedIn
 
 module.exports = { UserAction, UserStore }

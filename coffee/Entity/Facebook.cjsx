@@ -5,7 +5,7 @@ window.fbAsyncInit = ->
     appId: '1466024120391100'
     version: 'v2.4'
     cookie: true
-  UserAction.status()
+  UserAction.login()
 
 initFB = (d, s, id) ->
   fjs = d.getElementsByTagName(s)[0]

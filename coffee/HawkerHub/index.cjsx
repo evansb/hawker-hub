@@ -2,7 +2,6 @@ $          = require 'jquery'
 React      = require 'react'
 Router     = require 'react-router'
 App        = require 'ampersand-app'
-Modal      = require 'react-modal'
 Home       = require './Home'
 Navbar     = require './Navbar'
 Footer     = require './Footer'
@@ -33,6 +32,4 @@ routes =
 module.exports =
   render: (el) ->
     Router.run routes, (Handler) ->
-      Modal.setAppElement el
-      Modal.injectCSS()
       React.render <Handler />, el
