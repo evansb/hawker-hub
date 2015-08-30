@@ -59,7 +59,7 @@ module.exports = React.createClass
         <div className="four columns navbar-menu">
           <UI.Tabs>
             <UI.Tab label="Latest" onActive={@props.latestTab} />
-            <UI.Tab label="Nearby" onActive={@props.nearbyTab}/>
+            <UI.Tab label="Nearby" onActive={@props.nearbyTab} />
           </UI.Tabs>
         </div>
         <div className="four columns navbar-user-status">

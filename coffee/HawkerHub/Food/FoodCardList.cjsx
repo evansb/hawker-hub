@@ -18,7 +18,7 @@ ShowMore = React.createClass
 ProgressBar = React.createClass
   render: ->
     <div className="loading-spinner">
-      <UI.CircularProgress mode="indeterminate" size={2} />
+      <img src="../../../../assets/food_loading@2x.gif" />
     </div>
 
 module.exports = React.createClass
@@ -26,12 +26,13 @@ module.exports = React.createClass
   getInitialState: ->
     items: []
     isInfiniteLoading: false
+    firstTimeFetch: true
   componentWillMount: ->
     FoodStore.listen (event) =>
       switch event.name
         when 'fetched'
           items = @state.items.concat event.value
-          @setState { items }
+          @setState { firstTimeFetch: false, items }
   handleInfiniteLoad: ->
     if @state.isInfiniteLoading
       @props.fetch(@state.items.length)
@@ -42,7 +43,7 @@ module.exports = React.createClass
       <FoodCard key={idx} model={value}
                 handleMoreClick={@props.handleMoreClick} />
     loader =
-      if @state.isInfiniteLoading
+      if (@state.isInfiniteLoading || @state.firstTimeFetch)
         <ProgressBar />
       else
         <ShowMore onClick={=> @setState { isInfiniteLoading: true} }/>
