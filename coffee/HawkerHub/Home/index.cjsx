@@ -24,6 +24,21 @@ AddButton = React.createClass
     <UI.FlatButton onClick={@props.onClick}
                    secondary={true} children={child} />
 
+CloseAddButton = React.createClass
+  render: ->
+    child =
+      <div className="row button-content">
+        <div className="four columns button-icon">
+          <UI.FontIcon className="material-icons">close</UI.FontIcon>
+        </div>
+        <div className="eight columns button-text">
+          Close
+        </div>
+      </div>
+    <UI.FlatButton onClick={@props.onClick}
+        secondary={true} children={child} />
+
+
 module.exports = React.createClass
   mixins: [UITheme]
   getInitialState: ->
@@ -38,14 +53,17 @@ module.exports = React.createClass
   showAddItem: (self) -> -> self.setState { addItemShown: true }
   hideAddItem: (self) -> -> self.setState { addItemShown: false }
   render: ->
+    buttonShown = if (!@state.addItemShown)
+        <AddButton onClick={@showAddItem(this)}/>
+      else
+        <CloseAddButton onClick={@hideAddItem(this)}/>
+
     <div className="limit-width">
       <div className="row context-bar">
         <div className="ten columns">
           <h1>{@state.activeFilter.heading()}</h1>
         </div>
-        <div className="two columns">
-          <AddButton onClick={@showAddItem(this)}/>
-        </div>
+        <div className="two columns">{buttonShown}</div>
       </div>
       { if (@state.addItemShown) then <AddItem ref="addItem" /> }
       <FoodCardList />
