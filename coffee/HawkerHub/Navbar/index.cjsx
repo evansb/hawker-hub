@@ -4,20 +4,8 @@ UI            = require 'material-ui'
 Image         = require 'react-retina-image'
 UITheme       = require '../Common/UITheme'
 Icon          = require '../Common/MaterialIcon'
+{ Filter, FilterAction } = require '../../Entity/Filter'
 { UserStore, UserAction } = require '../../Entity/User'
-
-menuItems = [
-  { route: 'home', text: 'Home', leftIcon: <Icon name="home"/> },
-  { route: 'schedule', text: 'Schedule' }
-  { route: 'collection', text: 'Collections' },
-  { route: 'food-basket', text: 'Food Basket' }
-]
-
-LeftNavToggle = React.createClass
-  propTypes:
-    handleClick: React.PropTypes.func.isRequired
-  render: ->
-    <Icon name="add" overrideColor="white" onClick={@props.handleClick} />
 
 SearchBar = React.createClass
   render: ->
@@ -49,6 +37,8 @@ module.exports = React.createClass
       switch (event.name)
         when 'status'
           @setState { isLoggedIn: event.value is 'connected' }
+  latestTab: -> FilterAction.change Filter.Latest
+  nearbyTab: -> FilterAction.change Filter.Nearby
   render: ->
     <div className="navbar">
       <div className="row title">
@@ -58,8 +48,10 @@ module.exports = React.createClass
         </div>
         <div className="four columns navbar-menu">
           <UI.Tabs>
-            <UI.Tab label="Latest" onActive={@props.latestTab} />
-            <UI.Tab label="Nearby" onActive={@props.nearbyTab} />
+            <UI.Tab label="Latest" style={{height:'60px'}}
+                    onActive={@latestTab} />
+            <UI.Tab label="Nearby" style={{height:'60px'}}
+                    onActive={@nearbyTab} />
           </UI.Tabs>
         </div>
         <div className="four columns navbar-user-status">

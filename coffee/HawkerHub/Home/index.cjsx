@@ -5,11 +5,10 @@ UI      = require 'material-ui'
 Colors  = require 'material-ui/lib/styles/colors'
 UITheme = require '../Common/UITheme'
 FoodCardList = require '../Food/FoodCardList'
-Filter = require '../../Entity/Filter'
+{Filter, FilterStore} = require '../../Entity/Filter'
 FoodCard = require '../Food/FoodCard'
 AddItem = require '../AddItem'
 { UserStore } = require '../../Entity/User'
-
 
 AddButton = React.createClass
   render: ->
@@ -22,19 +21,20 @@ AddButton = React.createClass
           Add Item
         </div>
       </div>
-    <UI.FlatButton
-          onClick={@props.onClick}
-          secondary={true} children={child} />
+    <UI.FlatButton onClick={@props.onClick}
+                   secondary={true} children={child} />
 
 module.exports = React.createClass
   mixins: [UITheme]
   getInitialState: ->
     addItemShown: false
-    activeFilter: Filter.Nearby
+    activeFilter: Filter.Latest
   componentWillMount: ->
     UserStore.listen (event) =>
       if event.value? and event.value is 'connected'
         @setState { name: UserStore.getName() }
+    FilterStore.listen (newFilter) =>
+      @setState { activeFilter: newFilter }
   showAddItem: (self) -> -> self.setState { addItemShown: true }
   hideAddItem: (self) -> -> self.setState { addItemShown: false }
   render: ->
@@ -48,5 +48,5 @@ module.exports = React.createClass
         </div>
       </div>
       { if (@state.addItemShown) then <AddItem ref="addItem" /> }
-      <FoodCardList fetch={@state.activeFilter.fn} />
+      <FoodCardList />
     </div>

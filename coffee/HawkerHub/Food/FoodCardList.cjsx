@@ -8,6 +8,7 @@ UITheme  = require '../Common/UITheme'
 Icon     = require '../Common/MaterialIcon'
 FoodCard = require './FoodCard'
 { FoodAction, FoodStore } = require '../../Entity/Food'
+{ Filter, FilterStore } = require '../../Entity/Filter'
 
 ShowMore = React.createClass
   render: ->
@@ -27,17 +28,26 @@ module.exports = React.createClass
     items: []
     isInfiniteLoading: false
     firstTimeFetch: true
+    activeFilter: Filter.Latest
   componentWillMount: ->
+    FilterStore.listen (newFilter) =>  
+      @fetchInit newFilter
+      @setState
+        firstTimeFetch: true
+        activeFilter: newFilter
+        items: []
+        isInfiniteLoading: false
     FoodStore.listen (event) =>
       switch event.name
         when 'fetched'
           items = @state.items.concat event.value
           @setState { firstTimeFetch: false, items }
+  fetch: -> @state.activeFilter.fn @state.items.length
+  fetchInit: (useFilter) ->
+    if (useFilter) then useFilter.init() else @state.activeFilter.init()
   handleInfiniteLoad: ->
-    if @state.isInfiniteLoading
-      @props.fetch(@state.items.length)
-  componentDidMount: ->
-    @props.fetch(@state.items.length)
+    if (@state.isInfiniteLoading) then @fetch()
+  componentDidMount: -> @fetchInit()
   render: ->
     items = _.map @state.items, (value, idx) =>
       <FoodCard key={idx} model={value}
