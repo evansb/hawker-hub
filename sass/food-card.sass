@@ -21,10 +21,13 @@ $min-height: 400px
   .ago
     color: material-color('grey', '400')
     text-align: right
-    padding-right: 1em
 
   .left-column, .right-column
+    position: relative
     min-height: $min-height
+
+  .right-column
+    padding-right: 1em
 
   .left-column
     white-space: nowrap
@@ -42,7 +45,6 @@ $min-height: 400px
   .photo > div > div > div > div
     background: linear-gradient(to bottom, rgba(0,0,0,0) 0% , rgba(0,0,0,0.7) 70%, rgba(0,0,0,0.8) 100%) !important
     color: white
-    padding: 1em
     line-height: 1em
     h1
       font-size: 2em
@@ -56,6 +58,12 @@ $min-height: 400px
       width: 100%
       bottom: 1em
       left: 1em
+
+  .new-comment textarea
+    border: rgba(0,0,0,0.05) solid 0.5px
+    width: 100%
+    right: 1em
+    resize: none
 
   .comments
     border-color: black

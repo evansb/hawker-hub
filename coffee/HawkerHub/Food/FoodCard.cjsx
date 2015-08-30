@@ -1,10 +1,12 @@
 React       = require 'react'
+TextArea    = require 'react-textarea-autosize'
 UI          = require 'material-ui'
 UITheme     = require '../Common/UITheme'
 Icon        = require '../Common/MaterialIcon'
 $           = require 'jquery'
 _           = require 'lodash'
 moment      = require 'moment'
+
 { UserStore, UserAction } = require '../../Entity/User'
 
 Overlay = React.createClass
@@ -73,11 +75,7 @@ Comments = React.createClass
       <UI.ListItem className="comments-box"
         secondaryText={ <textarea></textarea> }
         secondaryTextLines={2} />
-    <div>
-      <UI.List>
-        {comments}
-      </UI.List>
-    </div>
+    <UI.List>{comments}</UI.List>
 
 module.exports = React.createClass
   mixins: [UITheme]
@@ -98,11 +96,9 @@ module.exports = React.createClass
                 caption={@props.model.caption}
                 date={@props.model.addedDate}
                 likes={@props.model.likes} />
-        <Comments comment={@props.model.comments}/>
+        <Comments comment={@props.model.comments} />
         <div className="new-comment">
-          <UI.TextField
-              hintText="Add a comment..."
-              multiLine={true} />
+          <TextArea minRows={1} placeholder="Add a comment..."></TextArea>
         </div>
       </div>
     </UI.Paper>
