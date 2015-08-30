@@ -59,6 +59,7 @@
     "jquery": "^2.1.4",
     "lodash": "^3.10.1",
     "material-ui": "^0.10.4",
+    "moment": "^2.10.6",
     "react": "^0.13.3",
     "react-infinite-scroll": "^0.1.5",
     "react-modal": "^0.3.0",
@@ -66,6 +67,7 @@
     "react-router": "^0.13.3",
     "react-tap-event-plugin": "^0.1.7",
     "reactify": "^1.1.1",
-    "reflux": "^0.2.12"
+    "reflux": "^0.2.12",
+    "sass-material-colors": "0.0.5"
   }
 }

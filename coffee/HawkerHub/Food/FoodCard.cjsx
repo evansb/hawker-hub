@@ -4,6 +4,7 @@ UITheme     = require '../Common/UITheme'
 Icon        = require '../Common/MaterialIcon'
 $           = require 'jquery'
 _           = require 'lodash'
+moment      = require 'moment'
 { UserStore, UserAction } = require '../../Entity/User'
 
 Overlay = React.createClass
@@ -19,22 +20,38 @@ Photo = React.createClass
       </UI.CardMedia>
     </div>
 
-UserHeader = React.createClass
+InfoHeader = React.createClass
+  render: ->
+    <div className="row">
+      <div className="two columns likes">
+        {@props.likes.length} likes
+      </div>
+      <div className="ten columns ago">
+        {moment(@props.date).fromNow()}
+      </div>
+    </div>
+
+Caption = React.createClass
+  mixins: [UITheme]
+  render: ->
+    <div className="row">
+      <UI.CardText>{@props.text}</UI.CardText>
+    </div>
+
+Header = React.createClass
   mixins: [UITheme]
   render: ->
     <div>
       <div className="row">
         <div className="six columns user">
-          <UI.CardHeader title={@props.text}
-                         avatar={@props.avatar} />
+          <UI.CardHeader title={@props.name} avatar={@props.avatar} />
         </div>
         <div className="six columns toolbar">
           <Toolbar />
         </div>
       </div>
-      <div className="row">
-        <UI.CardText>{@props.caption}</UI.CardText>
-      </div>
+      <InfoHeader likes={@props.likes} date={@props.date} />
+      <Caption text={@props.caption} />
     </div>
 
 Description = React.createClass
@@ -54,18 +71,10 @@ Comments = React.createClass
   render: ->
     comments = _.map @props.comments, (comment, idx) ->
       <UI.ListItem className="comments-box"
-        key={idx} leftAvatar={<UI.Avatar src={UserStore.getProfilePicture()} />}
         secondaryText={ <textarea></textarea> }
         secondaryTextLines={2} />
-    newComment =
-      <UI.ListItem className="comments-box"
-          key={comments.length}
-          leftAvatar={<UI.Avatar src={UserStore.getProfilePicture()} />}
-          secondaryText={ <textarea></textarea> }
-          secondaryTextLines={2} />
-    comments.push newComment
     <div>
-      <UI.List subheader="Comments (0)">
+      <UI.List>
         {comments}
       </UI.List>
     </div>
@@ -84,9 +93,16 @@ module.exports = React.createClass
         <Photo title={@props.model.itemName} src={@props.model.photoURL} />
       </div>
       <div className="six columns right-column">
-        <UserHeader text={@props.model.user.displayName}
-                    avatar={authorPicture}
-                    caption={@props.model.caption} />
+        <Header name={@props.model.user.displayName}
+                avatar={authorPicture}
+                caption={@props.model.caption}
+                date={@props.model.addedDate}
+                likes={@props.model.likes} />
         <Comments comment={@props.model.comments}/>
+        <div className="new-comment">
+          <UI.TextField
+              hintText="Add a comment..."
+              multiLine={true} />
+        </div>
       </div>
     </UI.Paper>

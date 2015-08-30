@@ -22,6 +22,7 @@ Food = Model.extend
     'userId': 'string'
     'user': 'object'
     'comments': 'any'
+    'likes': 'any'
   derived:
     name: ->
       deps: ['itemName']

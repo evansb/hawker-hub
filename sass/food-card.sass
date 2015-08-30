@@ -1,4 +1,8 @@
 
+@import 'node_modules/sass-material-colors/sass/sass-material-colors'
+
+$min-height: 400px
+
 .ReactModal__Overlay
   background-color: rgba(0, 0, 0, 0.75) !important
 
@@ -7,11 +11,17 @@
   margin: 0 auto
   max-width: 1024px
 
-$min-height: 400px
-
 .food-card
   text-align: left
   margin-top: 1em
+
+  .likes
+    color: material-color('red', '600')
+
+  .ago
+    color: material-color('grey', '400')
+    text-align: right
+    padding-right: 1em
 
   .left-column, .right-column
     min-height: $min-height

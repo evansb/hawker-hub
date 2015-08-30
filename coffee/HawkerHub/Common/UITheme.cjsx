@@ -163,8 +163,8 @@ HawkerHubLightTheme =
         backgroundColor: 'transparent'
         activeColor: Colors.white
       textField:
-        textColor: Colors.white
-        hintColor: Colors.white
+        textColor: Colors.black
+        hintColor: Colors.grey400
         floatingLabelColor: palette.textColor
         disabledTextColor: palette.disabledColor
         errorColor: Colors.redA700
