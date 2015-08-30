@@ -6,17 +6,17 @@ $           = require 'jquery'
 _           = require 'lodash'
 { UserStore, UserAction } = require '../../Entity/User'
 
-Title = React.createClass
-  render: ->
-    <div className='row title'>
-      <h1>{@props.model.itemName}</h1>
-    </div>
+Overlay = React.createClass
+  render: -> <h1>{@props.text}</h1>
 
 Photo = React.createClass
   render: ->
-    <div className="image-container">
-      <img className="u-full-width u-max-full-width u-max-full-height"
-             src={@props.model.photoURL} />
+    <div className="photo">
+      <span className="helper"></span>
+      <UI.CardMedia overlay={<Overlay text={@props.title} className="overlay" />}>
+        <img className="u-full-width u-max-full-width"
+            src={@props.src} />
+      </UI.CardMedia>
     </div>
 
 UserHeader = React.createClass
@@ -80,11 +80,10 @@ module.exports = React.createClass
     authorId = @props.model.user.providerUserId
     authorPicture = "https://graph.facebook.com/v2.4/#{authorId}/picture"
     <UI.Paper zDepth={1} className="row food-card">
-      <div className="six columns">
-        <Photo model={@props.model} />
-        <Title model={@props.model} />
+      <div className="six columns left-column">
+        <Photo title={@props.model.itemName} src={@props.model.photoURL} />
       </div>
-      <div className="six columns comments">
+      <div className="six columns right-column">
         <UserHeader text={@props.model.user.displayName}
                     avatar={authorPicture}
                     caption={@props.model.caption} />
