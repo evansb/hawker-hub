@@ -67,7 +67,7 @@ Toolbar = React.createClass
   mixins: [UITheme]
   render: ->
     <UI.CardActions>
-      <Icon name="favorite_border"/>
+      <Icon name="favorite_border" />
       <Icon name="share"/>
     </UI.CardActions>
 

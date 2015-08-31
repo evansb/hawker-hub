@@ -44,7 +44,7 @@ module.exports = React.createClass
           items = @state.items.concat event.value
           @setState { firstTimeFetch: false, items }
         when 'created'
-          @setState { items: [event.value].concat @state.items }  
+          @setState { items: [event.value].concat @state.items }
   fetch: -> @state.activeFilter.fn @state.items.length
   fetchInit: (useFilter) ->
     if (useFilter) then useFilter.init() else @state.activeFilter.init()
@@ -52,8 +52,7 @@ module.exports = React.createClass
     if (@state.isInfiniteLoading) then @fetch()
   render: ->
     items = _.map @state.items, (value, idx) =>
-      <FoodCard key={idx} model={value}
-                handleMoreClick={@props.handleMoreClick} />
+      <FoodCard key={idx} model={value} />
     loader =
       if (@state.isInfiniteLoading || @state.firstTimeFetch)
         <ProgressBar />
