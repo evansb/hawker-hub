@@ -7,10 +7,6 @@ Icon          = require '../Common/MaterialIcon'
 
 module.exports = React.createClass
   mixins: [UITheme]
-  componentDidMount: ->
-    if ($(window).height() > $('body').height())
-      $(React.findDOMNode(this)).css('position','absolute').css('bottom',0)
-
   render: ->
     <footer>
       <div className="row">

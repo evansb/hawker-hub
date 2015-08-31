@@ -40,28 +40,24 @@ module.exports = React.createClass
   latestTab: -> FilterAction.change Filter.Latest
   nearbyTab: -> FilterAction.change Filter.Nearby
   render: ->
-    <div className="navbar">
-      <div className="row title">
-        <div className="container">
-        <div className="four columns navbar-search">
-          <SearchBar />
-        </div>
-        <div className="four columns navbar-menu">
-          <UI.Tabs>
-            <UI.Tab label="Latest" style={{height:'60px'}}
-                    onActive={@latestTab} />
-            <UI.Tab label="Nearby" style={{height:'60px'}}
-                    onActive={@nearbyTab} />
-          </UI.Tabs>
-        </div>
-        <div className="four columns navbar-user-status">
-          {
-            if (@state.isLoggedIn is no)
-              <LoginButton />
-            else if (@state.isLoggedIn is yes)
-              <LogoutButton />
-          }
-        </div>
-        </div>
+    <div className="row title navbar">
+      <div className="four columns navbar-search">
+        <SearchBar />
+      </div>
+      <div className="four columns navbar-menu">
+        <UI.Tabs>
+          <UI.Tab label="Latest" style={{height:'60px'}}
+                  onActive={@latestTab} />
+          <UI.Tab label="Nearby" style={{height:'60px'}}
+                  onActive={@nearbyTab} />
+        </UI.Tabs>
+      </div>
+      <div className="four columns navbar-user-status">
+        {
+          if (@state.isLoggedIn is no)
+            <LoginButton />
+          else if (@state.isLoggedIn is yes)
+            <LogoutButton />
+        }
       </div>
     </div>
