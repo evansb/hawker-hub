@@ -44,7 +44,7 @@ FoodStore = Reflux.createStore
       url: App.urlFor 'item'
       success: (data) =>
         newFood = new Food data
-        foods.add newFood
+        foods.add newFood, { merge: true }
         @trigger { name: 'created', value: newFood }
 
   onFetch: (options) ->
@@ -59,7 +59,7 @@ FoodStore = Reflux.createStore
           url: url
           success: (data) =>
             newFood = _.map data, (datum) => new Food datum
-            foods.add newFood
+            foods.add newFood, { merge: true }
             @trigger { name: 'fetched', value: newFood }
 
   onFetchInit: (options) ->
@@ -79,4 +79,4 @@ FoodStore = Reflux.createStore
         foods.add newFood
         @trigger { name: 'fetched', value: newFood }
 
-module.exports = { FoodAction, FoodStore }
+module.exports = { FoodAction, FoodStore, Food }
