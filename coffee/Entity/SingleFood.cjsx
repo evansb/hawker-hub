@@ -5,12 +5,23 @@ App        = require 'ampersand-app'
 Reflux     = require 'reflux'
 {Food}     = require './Food'
 
-SingleFoodAction = Reflux.createActions ['fetch']
+SingleFoodAction = Reflux.createActions ['fetch', 'like']
 
 food = null
 
 SingleFoodStore = Reflux.createStore
   listenables: SingleFoodAction
+
+  refetch: (itemId) ->
+    url = App.urlFor "item/#{itemId}"
+    $.ajax
+      type: 'GET'
+      dataType: 'json'
+      crossOrigin: true
+      url: url
+      success: (data) =>
+        food = new Food data
+        @trigger food
 
   onFetch: (id) ->
     url = App.urlFor 'item' + '/' + id
@@ -22,5 +33,14 @@ SingleFoodStore = Reflux.createStore
       success: (data) =>
         food = new Food data
         @trigger food
+
+  onLike: (itemId) ->
+    if (food && (itemId is food.itemId))
+      url = App.urlFor "item/#{itemId}/like"
+      $.ajax
+        type: 'POST'
+        crossOrigin: true
+        url: url
+        success: => @refetch itemId
 
 module.exports = { SingleFoodAction, SingleFoodStore }
