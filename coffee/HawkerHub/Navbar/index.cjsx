@@ -1,11 +1,12 @@
 React         = require 'react'
+{Navigation}  = require 'react-router'
 App           = require 'ampersand-app'
 UI            = require 'material-ui'
 Image         = require 'react-retina-image'
 UITheme       = require '../Common/UITheme'
 Icon          = require '../Common/MaterialIcon'
 { Filter, FilterAction } = require '../../Entity/Filter'
-{ UserStore, UserAction } = require '../../Entity/User'
+{ UserStore, UserAction, User } = require '../../Entity/User'
 
 SearchBar = React.createClass
   render: ->
@@ -14,31 +15,30 @@ SearchBar = React.createClass
     </div>
 
 LoginButton = React.createClass
-  mixins: [UITheme]
   render: ->
     <div className="twelve columns login-div">
-      <a className="login-button" onClick={-> UserAction.login()}>Login with Facebook</a>
+      <a className="login-button" onClick={-> UserAction.login()}>
+        Login with Facebook
+      </a>
     </div>
 
 LogoutButton = React.createClass
-  mixins: [UITheme]
   render: ->
     <div className="twelve columns login-div">
-      <a className="login-button" onClick={-> UserAction.logout()}>{UserStore.getName()}</a>
+      <a className="login-button" onClick={-> UserAction.logout()}>
+        {User.name}
+      </a>
     </div>
 
 module.exports = React.createClass
-  mixins: [UITheme]
+  mixins: [UITheme, Navigation]
   getInitialState: ->
     isLoggedIn: no
-  toggleLeftNav: ->  @refs.addDialog.show()
   componentWillMount: ->
     UserStore.listen (event) =>
       switch (event.name)
         when 'status'
           @setState { isLoggedIn: event.value is 'connected' }
-  latestTab: -> FilterAction.change Filter.Latest
-  nearbyTab: -> FilterAction.change Filter.Nearby
   render: ->
     <div className="row title navbar">
       <div className="four columns navbar-search">
@@ -46,18 +46,13 @@ module.exports = React.createClass
       </div>
       <div className="four columns navbar-menu">
         <UI.Tabs>
-          <UI.Tab label="Latest" style={{height:'60px'}}
-                  onActive={@latestTab} />
-          <UI.Tab label="Nearby" style={{height:'60px'}}
-                  onActive={@nearbyTab} />
+          <UI.Tab label="Latest"
+                  onActive={=> @transitionTo 'home', {}, {filter:'latest'}} />
+          <UI.Tab label="Nearby"
+                  onActive={=> @transitionTo 'home', {}, {filter:'nearby'}} />
         </UI.Tabs>
       </div>
       <div className="four columns navbar-user-status">
-        {
-          if (@state.isLoggedIn is no)
-            <LoginButton />
-          else if (@state.isLoggedIn is yes)
-            <LogoutButton />
-        }
+        { if @state.isLoggedIn then <LogoutButton /> else <LoginButton /> }
       </div>
     </div>

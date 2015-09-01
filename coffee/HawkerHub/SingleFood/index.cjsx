@@ -12,6 +12,6 @@ module.exports = React.createClass
     SingleFoodStore.listen (food) => @setState { food }
     SingleFoodAction.fetch id
   render: ->
-    <div className="limit-width">
+    <div className="single-food">
       { if (@state.food) then <FoodCard model={@state.food} /> }
     </div>
