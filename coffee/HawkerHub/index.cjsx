@@ -24,12 +24,12 @@ HawkerHub = React.createClass
 routes =
   <Route name='app' path='/' handler={HawkerHub}>
     <DefaultRoute handler={Home}/>
-    <Route name='home' path='/home' handler={Home} />  
+    <Route name='home' path='/home' handler={Home} />
     <Route name='foodDetail' path='/food/:id' handler={SingleFood} />
     <NotFoundRoute handler={Home}/>
   </Route>
 
 module.exports =
   render: (el) ->
-    Router.run routes, (Handler) ->
+    Router.run routes, Router.HistoryLocation, (Handler) ->
       React.render <Handler />, el
