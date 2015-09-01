@@ -10,28 +10,41 @@ UserAction = Reflux.createActions ['status', 'login', 'logout']
 
 User = { isLoggedIn: false }
 
+onSuccessLoc = (pos) ->
+  User.latitude = pos.coords.latitude
+  User.longitude = pos.coords.longitude
+
+onErrorLoc = ->
+
+locOptions =
+  enableHighAccuracy: false
+  timeout: 4000
+  maximumAge: 30000
+
 UserStore = Reflux.createStore
   listenables: UserAction
 
-  getLoginStatus: -> User.isLoggedIn
-  getName: -> User.name
-  getProfilePicture: -> User.profilePicture
+  watchUserPosition: ->
+    if (typeof navigator isnt 'undefined')
+      navigator.geolocation.watchPosition(onSuccessLoc, onErrorLoc, locOptions)
 
-  onLogin: (options) ->
-    FB.getLoginStatus (response) =>
-      if (response.status isnt 'connected') then FB.login()
-      url = App.urlFor 'users/login'
-      $.ajax
-        type: 'GET'
-        url: url
-        success: (data) =>
-          @trigger { name: 'status', value: response.status }
-      FB.api '/me/?fields=id,name,picture', (response2) =>
-        User.id = response2.id
-        User.name = response2.name
-        User.profilePicture = response2.picture.url
-        console.log(response2)
-        @trigger { name: 'status', value: response.status }
+  fetchUserInfo: ->
+    @watchUserPosition()
+    FB.api '/me/?fields=id,name,picture', (response) =>
+      User.id = response.id
+      User.name = response.name
+      User.profilePicture = response.picture.data.url
+      @trigger { name: 'status', value: 'connected' }
+
+  onLogin: ->
+    callback = (response) =>
+      if (response.status is 'connected')
+        url = App.urlFor 'users/login'
+        $.ajax
+          type: 'GET'
+          url: url
+          success: => @fetchUserInfo()
+    FB.login callback, { scope: 'publish_actions,user_friends' }
 
   onLogout: () ->
     FB.logout()
@@ -45,15 +58,6 @@ UserStore = Reflux.createStore
   onStatus: ->
     FB.getLoginStatus (response) =>
       User.isLoggedIn = response.status is 'connected'
-      url = App.urlFor 'users/login'
-      $.ajax
-        type: 'GET'
-        url: url
-      FB.api '/me/?fields=id,name,picture', (response2) =>
-        User.id = response2.id
-        User.name = response2.name
-        User.profilePicture = response2.picture.url
-        console.log(response2)
-        @trigger { name: 'status', value: response.status }
+      if (User.isLoggedIn) then @fetchUserInfo() else @onLogin()
 
-module.exports = { UserAction, UserStore }
+module.exports = { UserAction, UserStore, User }

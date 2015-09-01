@@ -1,22 +1,57 @@
 
 .add-dialog
   text-align: left
-  max-width: 960px
-  background: rgba(0,0,0,0) !important
+  height: 400px
+
   .title
     padding: 1em
 
-.food-name
-  font-weight: bold
+  .new-food
+    border: none
+    border-radius: none
+    height: 2em
+    overflow: visible
+    margin-left: 0.5em
+    margin-right: 0.5em
+    font-size: 2em
+    line-height: 2em
 
-.buttons
-  text-align: center
+  .toggle
+    position: absolute
+    bottom: 1em
+    left: 2em
 
-.upload-placeholder-container
-  padding-top: 5%
-  padding-left: 15%
-  padding-right: 15%
-  text-align: center
-  img
-    padding-top: 20%
-    padding-bottom: 20%
+  .buttons
+    text-align: right
+    position: absolute
+    bottom: 1em
+    right: 2em
+
+  .new-food:focus
+    border: none
+    line-height: 2em
+
+  textarea
+    position: relative
+    border: rgba(0,0,0,0.05) solid 0.5px
+    width: 100%
+    resize: none
+
+  textarea:focus
+    border: rgba(0,0,0,0.05) solid 0.5px
+
+  .right-column
+    padding-top: 5em
+    padding-right: 1em
+    padding-bottom: 2em
+
+  .upload-placeholder-container
+    cursor: pointer
+    cursor: hand
+    padding-top: 5%
+    padding-left: 15%
+    padding-right: 15%
+    text-align: center
+    img
+      padding-top: 20%
+      padding-bottom: 20%

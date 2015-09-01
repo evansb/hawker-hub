@@ -4,8 +4,10 @@ window.fbAsyncInit = ->
   FB.init
     appId: '1466024120391100'
     version: 'v2.4'
+    xfbml: true
     cookie: true
   UserAction.status()
+  FB.XFBML.parse()
 
 initFB = (d, s, id) ->
   fjs = d.getElementsByTagName(s)[0]

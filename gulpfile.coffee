@@ -65,8 +65,7 @@ gulp.task 'watch', ['coffee', 'cjsx'], ->
   gulp.watch 'coffee/**/*.cjsx', ['cjsx']
   gulp.watch 'test/**/*.coffee', ['test']
   gulp.watch 'sass/**/*.sass', ['sass']
-  gulp.watch 'dist/**/**', (file) ->
-    browserSync.reload(file.path) if file.type is 'changed'
+  gulp.watch('dist/**/*').on 'change', browserSync.reload
 
 gulp.task 'browserify', ['coffee', 'cjsx'], ->
   config =
@@ -76,6 +75,7 @@ gulp.task 'browserify', ['coffee', 'cjsx'], ->
     debug: false
   bundler = watchify (browserify config)
   rebundle = ->
+    console.log 'rebundling...'
     bundler.bundle()
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
       .pipe(source 'hawker-hub.js')
@@ -91,4 +91,4 @@ gulp.task 'test', ['coffee', 'coffee_test'], (done) ->
   (new Server config, -> done()).start()
 
 gulp.task 'clean', -> del(['dist', 'js'])
-gulp.task 'default', ['sass', 'watch', 'browserify', 'browser-sync']
+gulp.task 'default', ['sass', 'watch', 'browserify']

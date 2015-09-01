@@ -1,42 +1,70 @@
 
+@import 'node_modules/sass-material-colors/sass/sass-material-colors'
+
+$min-height: 400px
+
 .food-card
-  overflow: hidden
   text-align: left
   margin-top: 1em
-  background: #263238
-  cursor: pointer
-  cursor: hand
 
-.food-card > div > div > div > div
-  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.71) 100%) !important
+  .likes
+    color: material-color('red', '600')
 
-.food-card-progress
-  height: 350px
-  vertical-align: middle
-  text-align: center
+  .ago
+    color: material-color('grey', '400')
+    text-align: right
 
-.food-card-progress-bar
-  position: absolute
-  bottom: 0px
+  .left-column, .right-column
+    position: relative
+    min-height: $min-height
 
-.food-card:hover .food-card-title-row
-  background-color: rgba(0,0,0,0.5)
-  display: block
+  .right-column
+    padding-right: 1em
 
-.food-card-title
-  letter-spacing: 0.08em
-  line-height: 2em
-  color: white
-  font-size: 1em
-  padding-left: 1em
-  padding-right: 1em
-  padding-bottom: 1em
-  display: block
+  .left-column
+    background: black
 
-.food-card-subtitle
-  color: white
+    img
+      min-height: 300px
 
-.show-more
-  padding-top: 2em
-  text-align: center
-  padding-bottom: 2em
+  .overlay
+    h1
+      text-shadow: 3px 4px 5px rgba(0,0,0,0.5)
+      padding-left: 0.5em
+      font-size: 2.5em
+    color: white
+    position: absolute
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0% , rgba(0,0,0,0.7) 70%, rgba(0,0,0,0.8) 100%) !important
+    width: 100%
+    z-index: 100
+    bottom: 0
+    left: 0
+
+  textarea
+    border: none
+    border-radius: 0
+    border-top: 1px solid rgba(0,0,0,0.1)
+    width: 100%
+    position: absolute
+    bottom: 0
+    right: 1em
+    resize: none
+
+  .comments
+    border-color: black
+    overflow-y: auto
+
+  .toolbar
+    text-align: right
+
+  .comments-box
+    *
+      color: black !important
+    textarea
+      width: 90%
+      border-color: #dadada
+      border-radius: 0
+  img
+    display: block
+    margin-left: auto
+    margin-right: auto

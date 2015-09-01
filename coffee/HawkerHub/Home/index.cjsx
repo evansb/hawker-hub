@@ -6,36 +6,65 @@ Colors  = require 'material-ui/lib/styles/colors'
 UITheme = require '../Common/UITheme'
 FoodCardList = require '../Food/FoodCardList'
 Filter = require '../../Entity/Filter'
-FoodCardDetail = require '../Food/FoodCardDetail'
-{ UserStore } = require '../../Entity/User'
+FoodCard = require '../Food/FoodCard'
+AddItem = require '../AddItem'
+{ User, UserStore } = require '../../Entity/User'
+{ FoodStore } = require '../../Entity/Food'
+
+AddButton = React.createClass
+  render: ->
+    child =
+      <div className="row button-content">
+        <div className="four columns button-icon">
+          <UI.FontIcon className="material-icons">add</UI.FontIcon>
+        </div>
+        <div className="eight columns button-text">Add Item</div>
+      </div>
+    <UI.FlatButton onClick={@props.onClick} secondary={true} children={child} />
+
+CloseAddButton = React.createClass
+  render: ->
+    child =
+      <div className="row button-content">
+        <div className="four columns button-icon">
+          <UI.FontIcon className="material-icons">close</UI.FontIcon>
+        </div>
+        <div className="eight columns button-text">
+          Close
+        </div>
+      </div>
+    <UI.FlatButton onClick={@props.onClick} secondary={true} children={child} />
 
 module.exports = React.createClass
   mixins: [UITheme]
   getInitialState: ->
-    modalIsOpen: false
-    modalModel: null
-    items: []
-    name: UserStore.getName() or 'My'
+    name: null
+    addItemShown: false
+    hasLoggedIn: false
   componentWillMount: ->
     UserStore.listen (event) =>
       if event.value? and event.value is 'connected'
-        @setState { name: UserStore.getName() }
-  handleMoreClick: (model) ->
-    @setState { modalIsOpen: true, modalModel: model }
-  handleCancel: -> @setState { modalIsOpen: false }
-  show: -> @setState { modalIsOpen: true}
+        @setState { name: User.name, hasLoggedIn: true }
+    FoodStore.listen (event) =>
+      if event.name is 'created' then @setState { addItemShown: false }
+  showAddItem: (self) -> -> self.setState { addItemShown: true }
+  hideAddItem: (self) -> -> self.setState { addItemShown: false }
+  componentDidMount: ->
+    console.log @props.query.filter
   render: ->
-    <div>
-      <Modal className="food-card-detail"
-             isOpen = { @state.modalIsOpen }
-             onRequestClose = { @handleCancel}
-             ref="dialog" modal={false}>
-        <FoodCardDetail ref="foodDetail" model={@state.modalModel} />
-      </Modal>
-      <div style={{textAlign:'right'}} className="row limit-width context-title">
-        <UI.RaisedButton secondary={true} onClick={@props.onClick} label="Add an item" />
+    buttonShown =
+      if (@state.hasLoggedIn && !@state.addItemShown)
+        <AddButton onClick={@showAddItem(this)}/>
+      else if (@state.hasLoggedIn)
+        <CloseAddButton onClick={@hideAddItem(this)}/>
+    filter = Filter.get @props.query.filter or 'latest'
+    <div className="limit-width">
+      <div className="row context-bar">
+        <div className="ten columns">
+          <h1>{filter.heading()}</h1>
+        </div>
+        <div className="two columns">{buttonShown}</div>
       </div>
-      <FoodCardList className="limit-width"
-                    fetch={Filter.Nearby}
-                    handleMoreClick={@handleMoreClick} />
+      { if (@state.addItemShown) then <AddItem ref="addItem" /> }
+      { if (@state.hasLoggedIn) then <FoodCardList filter={filter} /> }
     </div>

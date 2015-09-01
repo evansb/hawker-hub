@@ -2,23 +2,25 @@ $        = require 'jquery'
 _        = require 'lodash'
 React    = require 'react'
 Image    = require 'react-retina-image'
-Layout   = (require 'react-grid-layout').Responsive
 UI       = require 'material-ui'
 InfiniteScroll = (require 'react-infinite-scroll')(React)
 UITheme  = require '../Common/UITheme'
+Icon     = require '../Common/MaterialIcon'
 FoodCard = require './FoodCard'
 { FoodAction, FoodStore } = require '../../Entity/Food'
+{ Filter, FilterStore } = require '../../Entity/Filter'
+{ UserStore } = require '../../Entity/User'
 
 ShowMore = React.createClass
   render: ->
     <div className="show-more">
-      <UI.RaisedButton secondary={true} onClick={@props.onClick} label="Show More" />
+      <Icon onClick={@props.onClick} name="expand_more" />
     </div>
 
 ProgressBar = React.createClass
   render: ->
     <div className="loading-spinner">
-      <UI.CircularProgress mode="indeterminate" size={2} />
+      <img src="../../../../assets/food_loading@2x.gif" />
     </div>
 
 module.exports = React.createClass
@@ -26,29 +28,28 @@ module.exports = React.createClass
   getInitialState: ->
     items: []
     isInfiniteLoading: false
+    firstTimeFetch: true
   componentWillMount: ->
+    @fetchInit()
+    @setState
+      firstTimeFetch: true
+      items: []
+      isInfiniteLoading: false
     FoodStore.listen (event) =>
       switch event.name
         when 'fetched'
           items = @state.items.concat event.value
-          @setState { items }
-  handleInfiniteLoad: ->
-    if @state.isInfiniteLoading
-      @props.fetch(@state.items.length)
-  componentDidMount: ->
-    @props.fetch(@state.items.length)
+          @setState { firstTimeFetch: false, items }
+        when 'created'
+          @setState { items: [event.value].concat @state.items }
+  fetch: -> @state.filter.fn @state.items.length
+  fetchInit: -> @props.filter.init()
+  handleInfiniteLoad: -> if @state.isInfiniteLoading then @fetch()
   render: ->
-    items = _.map (_.chunk @state.items, 3), (threes, pidx) =>
-      <div className="row">
-        { _.map threes, (value, idx) =>
-            <div className="four columns">
-              <FoodCard key={pidx * 3 + idx}
-                        model={value}
-                        handleMoreClick={@props.handleMoreClick} />
-            </div> }
-      </div>
+    items = _.map @state.items, (value, idx) =>
+      <FoodCard key={idx} model={value} />
     loader =
-      if @state.isInfiniteLoading
+      if (@state.isInfiniteLoading || @state.firstTimeFetch)
         <ProgressBar />
       else
         <ShowMore onClick={=> @setState { isInfiniteLoading: true} }/>
