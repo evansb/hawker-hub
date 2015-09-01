@@ -8,7 +8,7 @@ Reflux     = require 'reflux'
 { User }   = require './User'
 
 FoodAction = Reflux.createActions ['create', 'fetch', 'fetchInit',
-  'fetchUser']
+  'fetchUser', 'like']
 
 Food = Model.extend
   url: -> App.urlFor 'item'
@@ -35,6 +35,18 @@ foods = new Collection [], { model: Food }
 
 FoodStore = Reflux.createStore
   listenables: FoodAction
+
+  refetch: (itemId) ->
+    url = App.urlFor "item/#{itemId}"
+    $.ajax
+      type: 'GET'
+      dataType: 'json'
+      crossOrigin: true
+      url: url
+      success: (data) =>
+        newFood = new Food data
+        foods.add newFood, { merge: true }
+        @trigger { name: 'changed', model: newFood }
 
   onCreate: (options) ->
     $.ajax
@@ -79,5 +91,14 @@ FoodStore = Reflux.createStore
         newFood = _.map data.data, (datum) => new Food datum
         foods.add newFood
         @trigger { name: 'fetched', value: newFood }
+
+  onLike: (options) ->
+    { itemId, key } = options
+    url = App.urlFor "item/#{itemId}/like"
+    $.ajax
+      type: 'POST'
+      crossOrigin: true
+      url: url
+      success: => @refetch itemId
 
 module.exports = { FoodAction, FoodStore, Food }
