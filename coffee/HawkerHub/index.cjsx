@@ -3,10 +3,11 @@ React      = require 'react'
 Router     = require 'react-router'
 App        = require 'ampersand-app'
 Home       = require './Home'
+SingleFood = require './SingleFood'
 Navbar     = require './Navbar'
 Footer     = require './Footer'
 
-{ Route, RouteHandler, NotFoundRoute } = Router
+{ Route, RouteHandler, NotFoundRoute, DefaultRoute } = Router
 
 HawkerHub = React.createClass
   render: ->
@@ -17,15 +18,14 @@ HawkerHub = React.createClass
       <div className="container">
         <RouteHandler />
       </div>
-      <footer>
-        <Footer />
-      </footer>
+      <Footer />
     </div>
 
 routes =
   <Route name='app' path='/' handler={HawkerHub}>
-    <Route name='home' path='/#' handler={Home} />
-    <Route name='foodDetail' path='/food/:id' handler={Home} />
+    <DefaultRoute handler={Home}/>
+    <Route name='home' path='/home' handler={Home} />  
+    <Route name='foodDetail' path='/food/:id' handler={SingleFood} />
     <NotFoundRoute handler={Home}/>
   </Route>
 

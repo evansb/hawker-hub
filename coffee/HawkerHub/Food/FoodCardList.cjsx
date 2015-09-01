@@ -29,31 +29,25 @@ module.exports = React.createClass
     items: []
     isInfiniteLoading: false
     firstTimeFetch: true
-    activeFilter: null
   componentWillMount: ->
-    FilterStore.listen (newFilter) =>
-      @fetchInit newFilter
-      @setState
-        firstTimeFetch: true
-        activeFilter: newFilter
-        items: []
-        isInfiniteLoading: false
+    @fetchInit()
+    @setState
+      firstTimeFetch: true
+      items: []
+      isInfiniteLoading: false
     FoodStore.listen (event) =>
       switch event.name
         when 'fetched'
           items = @state.items.concat event.value
           @setState { firstTimeFetch: false, items }
         when 'created'
-          @setState { items: [event.value].concat @state.items }  
-  fetch: -> @state.activeFilter.fn @state.items.length
-  fetchInit: (useFilter) ->
-    if (useFilter) then useFilter.init() else @state.activeFilter.init()
-  handleInfiniteLoad: ->
-    if (@state.isInfiniteLoading) then @fetch()
+          @setState { items: [event.value].concat @state.items }
+  fetch: -> @state.filter.fn @state.items.length
+  fetchInit: -> @props.filter.init()
+  handleInfiniteLoad: -> if @state.isInfiniteLoading then @fetch()
   render: ->
     items = _.map @state.items, (value, idx) =>
-      <FoodCard key={idx} model={value}
-                handleMoreClick={@props.handleMoreClick} />
+      <FoodCard key={idx} model={value} />
     loader =
       if (@state.isInfiniteLoading || @state.firstTimeFetch)
         <ProgressBar />

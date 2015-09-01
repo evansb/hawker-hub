@@ -7,7 +7,7 @@ $           = require 'jquery'
 _           = require 'lodash'
 moment      = require 'moment'
 
-{ UserStore, UserAction } = require '../../Entity/User'
+{ User, UserAction } = require '../../Entity/User'
 
 Overlay = React.createClass
   render: -> <h1>{@props.text}</h1>
@@ -52,7 +52,7 @@ Header = React.createClass
           <UI.CardHeader title={@props.name} avatar={@props.avatar} />
         </div>
         <div className="six columns toolbar">
-          <Toolbar />
+          <Toolbar itemId={@props.itemId} />
         </div>
       </div>
       <InfoHeader likes={@props.likes} date={@props.date} />
@@ -63,12 +63,30 @@ Description = React.createClass
   mixins: [UITheme]
   render: -> <UI.CardText> {@props.text} </UI.CardText>
 
+LoveButton = React.createClass
+  render: ->
+    <Icon name="favorite_border" />
+
+ShareButton = React.createClass
+  handleClick: ->
+    config =
+      method: 'share',
+      href: "http://#{API_HOST}/#/food/#{@props.itemId}"
+    FB.ui config, (response) ->
+      if (response && !response.error_code)
+        console.log('Posting completed.');
+      else
+        console.log('Error while posting.');
+
+  render: ->
+    <Icon name="share" onClick={@handleClick} />
+
 Toolbar = React.createClass
   mixins: [UITheme]
   render: ->
     <UI.CardActions>
-      <Icon name="favorite_border"/>
-      <Icon name="share"/>
+      <LoveButton itemId={@props.itemId }/>
+      <ShareButton itemId={@props.itemId} />
     </UI.CardActions>
 
 Comments = React.createClass
@@ -104,7 +122,8 @@ module.exports = React.createClass
                 avatar={authorPicture}
                 caption={@props.model.caption}
                 date={@props.model.addedDate}
-                likes={@props.model.likes} />
+                likes={@props.model.likes}
+                itemId={@props.model.itemId} />
         <Comments comment={@props.model.comments} />
         <div className="new-comment">
           <TextArea minRows={1} placeholder="Add a comment..."></TextArea>

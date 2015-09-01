@@ -28,12 +28,13 @@
 *
   font-family: "GillSansMT"
 
-body
-  margin: 0px
-  padding: 0px
-  background: #fafafa
-  width: 100%
+html, body
+  margin: 0
+  padding: 0
   height: 100%
+  min-height: 100%
+  height: auto
+  background: #fafafa
 
 header
   background: #B92B27
@@ -52,13 +53,14 @@ header span
   text-transform: none !important
 
 footer
+  height: 4em
+  margin-top: -4em
   text-align: center
   background: #B92B27
   padding-top: 2em
   padding-bottom: 2em
   width: 100%
-  bottom: 0px
-  color: white !important
+  box-shadow: 0px 500px 0px 500px #B92B27
 
 footer span
   text-shadow: 1px 1px 1px #555
@@ -103,7 +105,9 @@ textarea
   background: inherit
 
 .container
-  max-width: 1200px
+  max-width: 1024px
+  height: 100%
+  padding-bottom: 8em
 
 .context-bar
   h1
@@ -118,6 +122,9 @@ textarea
 .loading-spinner
   margin:20px
   text-align: center
+
+.navbar
+  max-width: 1024px
 
 .navbar-add
   float:left
@@ -136,3 +143,9 @@ textarea
 
 .u-max-full-height
   height: 100%
+
+.single-food
+  margin-top: 2em
+
+.fb-like
+  color: white !important

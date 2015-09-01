@@ -5,6 +5,7 @@ App        = require 'ampersand-app'
 Collection = require 'ampersand-rest-collection'
 Model      = require 'ampersand-model'
 Reflux     = require 'reflux'
+{ User }   = require './User'
 
 FoodAction = Reflux.createActions ['create', 'fetch', 'fetchInit',
   'fetchUser']
@@ -44,23 +45,23 @@ FoodStore = Reflux.createStore
       url: App.urlFor 'item'
       success: (data) =>
         newFood = new Food data
-        foods.add newFood
+        foods.add newFood, { merge: true }
         @trigger { name: 'created', value: newFood }
 
   onFetch: (options) ->
     { orderBy, limit, startAt } = options
     if (foods.length < (startAt + limit))
-      App.withLocation (latitude, longitude) =>
-        url = App.urlFor 'item', {orderBy, limit, startAt, latitude, longitude}
-        $.ajax
-          type: 'GET'
-          dataType: 'json'
-          crossOrigin: true
-          url: url
-          success: (data) =>
-            newFood = _.map data, (datum) => new Food datum
-            foods.add newFood
-            @trigger { name: 'fetched', value: newFood }
+      { latitude, longitude } = User
+      url = App.urlFor 'item', {orderBy, limit, startAt, latitude, longitude}
+      $.ajax
+        type: 'GET'
+        dataType: 'json'
+        crossOrigin: true
+        url: url
+        success: (data) =>
+          newFood = _.map data, (datum) => new Food datum
+          foods.add newFood, { merge: true }
+          @trigger { name: 'fetched', value: newFood }
 
   onFetchInit: (options) ->
     foods = new Collection [], { model: Food }
@@ -79,4 +80,4 @@ FoodStore = Reflux.createStore
         foods.add newFood
         @trigger { name: 'fetched', value: newFood }
 
-module.exports = { FoodAction, FoodStore }
+module.exports = { FoodAction, FoodStore, Food }
