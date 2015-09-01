@@ -42,7 +42,7 @@ module.exports = React.createClass
           @setState { firstTimeFetch: false, items }
         when 'created'
           @setState { items: [event.value].concat @state.items }
-  fetch: -> @state.filter.fn @state.items.length
+  fetch: -> @props.filter.fn @state.items.length
   fetchInit: -> @props.filter.init()
   handleInfiniteLoad: -> if @state.isInfiniteLoading then @fetch()
   render: ->
