@@ -38,11 +38,14 @@ InfoHeader = React.createClass
     if @props.likes.length is 0
       result = "0 likes"
     else
-      more = @props.likes.length - samplePeople.length
+      more = @props.likes.length - samplePeople.length - (if userLikeThis then 1 else 0)
       more = if more > 0 then (" and " + more + " other people") else ""
       result = if userLikeThis then "You" else ""
       if samplePeople.size() > 0
-        result = ["You"].concat(samplePeople).join(", ")
+        if result != ""
+          result = [result].concat(samplePeople).join(", ")
+        else
+          result = samplePeople.join(", ")
       result = result + more + " like this"
     <div className="row">
       <div className="nine columns likes">
