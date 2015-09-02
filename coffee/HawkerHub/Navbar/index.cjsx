@@ -33,12 +33,20 @@ LoginButton = React.createClass
 LogoutButton = React.createClass
   handleChange: (e, idx)->
     if idx is 1 then UserAction.logout()
+  getInitialState: ->
+    name: User.name
+  componentWillMount: ->
+    UserStore.listen (event) ->
+      console.log event
+      switch event
+        when 'fb_login_success'
+          @setState { name: User.name }
   render: ->
-    menuItemStyle = { 'text-align': 'right' }
+    menuItemStyle = { 'textAlign': 'right' }
     underlineStyle = { display: 'none' }
     iconStyle = { display: 'none' }
     iconMenuItems = [
-      { payload: '1', text: User.name },
+      { payload: '1', text: @state.name },
       { payload: '2', text: 'Logout' }
     ]
     <UI.DropDownMenu ref="menu" underlineStyle={underlineStyle}
