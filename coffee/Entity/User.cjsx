@@ -48,7 +48,7 @@ UserStore = Reflux.createStore
 
   fetchFacebookInfo: (next) ->
     FB.api '/me/?fields=id,name,picture', (response) =>
-      User.facebookID = response.id
+      User.id = response.id
       User.name = response.name
       User.profilePicture = response.picture.data.url
       next()
