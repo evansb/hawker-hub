@@ -2,6 +2,8 @@ App = require 'ampersand-app'
 Reflux = require 'reflux'
 { FoodAction } = require './Food'
 
+FilterAction = Reflux.createActions ['change']
+
 Latest =
   heading: () -> "Recent Items"
   init: () ->
@@ -18,5 +20,11 @@ Nearby =
 
 mapping = { 'latest': Latest, 'recent': Latest, 'nearby': Nearby }
 
-module.exports =
-  get: (name) -> mapping[name]
+FilterStore = Reflux.createStore
+  listenables: FilterAction
+
+  onChange: (name) ->
+    filter = mapping[name]
+    if filter then @trigger filter
+
+module.exports = { FilterAction, FilterStore }

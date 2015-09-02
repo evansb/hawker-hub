@@ -5,10 +5,10 @@ UI      = require 'material-ui'
 Colors  = require 'material-ui/lib/styles/colors'
 UITheme = require '../Common/UITheme'
 FoodCardList = require '../Food/FoodCardList'
-Filter = require '../../Entity/Filter'
 FoodCard = require '../Food/FoodCard'
 AddItem = require '../AddItem'
 { User, UserStore } = require '../../Entity/User'
+{ FilterStore, FilterAction } = require '../../Entity/Filter'
 { FoodStore } = require '../../Entity/Food'
 
 AddButton = React.createClass
@@ -39,32 +39,44 @@ module.exports = React.createClass
   mixins: [UITheme]
   getInitialState: ->
     name: null
+    heading: ""
     addItemShown: false
     hasLoggedIn: false
+  componentWillReceiveProps: (nextProps) ->
+    sameFilter = @props.query.filter is nextProps.query.filter
+    if (not sameFilter) then FilterAction.change nextProps.query.filter
   componentWillMount: ->
+    FilterStore.listen (filter) =>
+      @setState { heading: filter.heading() }
     UserStore.listen (event) =>
       if event.value? and event.value is 'connected'
+        FilterAction.change 'latest'
         @setState { name: User.name, hasLoggedIn: true }
+      if event.value? and event.value is 'logged_out'
+        location.reload()
+        @setState { name: null, hasLoggedIn: false }
     FoodStore.listen (event) =>
       if event.name is 'created' then @setState { addItemShown: false }
   showAddItem: (self) -> -> self.setState { addItemShown: true }
   hideAddItem: (self) -> -> self.setState { addItemShown: false }
-  componentDidMount: ->
-    console.log @props.query.filter
   render: ->
     buttonShown =
       if (@state.hasLoggedIn && !@state.addItemShown)
         <AddButton onClick={@showAddItem(this)}/>
       else if (@state.hasLoggedIn)
         <CloseAddButton onClick={@hideAddItem(this)}/>
-    filter = Filter.get @props.query.filter or 'latest'
     <div className="limit-width">
-      <div className="row context-bar">
-        <div className="ten columns">
-          <h1>{filter.heading()}</h1>
-        </div>
-        <div className="two columns">{buttonShown}</div>
-      </div>
+      {
+        if (@state.hasLoggedIn)
+          <div className="row context-bar">
+            <div className="ten columns">
+              <h1>{@state.heading}</h1>
+            </div>
+            <div className="two columns">{buttonShown}</div>
+          </div>
+        else
+          <h1>This is the landing page</h1>
+      }
       { if (@state.addItemShown) then <AddItem ref="addItem" /> }
-      { if (@state.hasLoggedIn) then <FoodCardList filter={filter} /> }
+      { if (@state.hasLoggedIn) then <FoodCardList ref="list" /> }
     </div>
