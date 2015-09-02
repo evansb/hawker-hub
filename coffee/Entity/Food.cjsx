@@ -8,7 +8,7 @@ Reflux     = require 'reflux'
 { User }   = require './User'
 
 FoodAction = Reflux.createActions ['create', 'fetch', 'fetchInit',
-  'fetchUser', 'like']
+  'fetchUser', 'like', 'addComment', 'unlike']
 
 Food = Model.extend
   url: -> App.urlFor 'item'
@@ -52,7 +52,7 @@ FoodStore = Reflux.createStore
     $.ajax
       type: 'POST'
       dataType: 'json'
-      data: options
+      data: JSON.stringify options
       crossOrigin: true
       url: App.urlFor 'item'
       success: (data) =>
@@ -98,6 +98,26 @@ FoodStore = Reflux.createStore
     $.ajax
       type: 'POST'
       crossOrigin: true
+      url: url
+      success: => @refetch itemId
+
+  onUnlike: (options) ->
+    { itemId, key } = options
+    url = App.urlFor "item/#{itemId}/like"
+    $.ajax
+      type: 'DELETE'
+      crossOrigin: true
+      url: url
+      success: => @refetch itemId
+
+  onAddComment: (options) ->
+    { itemId, value } = options
+    url = App.urlFor "item/#{itemId}/comment"
+    $.ajax
+      type: 'POST'
+      crossOrigin: true
+      dataType: 'json'
+      data: { message: value }
       url: url
       success: => @refetch itemId
 

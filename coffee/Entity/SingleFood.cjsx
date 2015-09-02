@@ -5,7 +5,7 @@ App        = require 'ampersand-app'
 Reflux     = require 'reflux'
 {Food}     = require './Food'
 
-SingleFoodAction = Reflux.createActions ['fetch', 'like']
+SingleFoodAction = Reflux.createActions ['fetch', 'like', 'unlike']
 
 food = null
 
@@ -42,5 +42,16 @@ SingleFoodStore = Reflux.createStore
         crossOrigin: true
         url: url
         success: => @refetch itemId
+
+  onUnlike: (options) ->
+    if (food && (itemId is food.itemId))
+      { itemId, key } = options
+      url = App.urlFor "item/#{itemId}/like"
+      $.ajax
+        type: 'DELETE'
+        crossOrigin: true
+        url: url
+        success: => @refetch itemId
+
 
 module.exports = { SingleFoodAction, SingleFoodStore }
