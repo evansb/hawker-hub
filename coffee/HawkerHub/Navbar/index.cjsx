@@ -2,15 +2,13 @@ React         = require 'react'
 {Navigation}  = require 'react-router'
 App           = require 'ampersand-app'
 UI            = require 'material-ui'
-Image         = require 'react-retina-image'
 UITheme       = require '../Common/UITheme'
 Icon          = require '../Common/MaterialIcon'
 { FilterAction } = require '../../Entity/Filter'
 { UserStore, UserAction, User } = require '../../Entity/User'
 
 SearchBar = React.createClass
-  getInitialState: ->
-    waiting: false
+  getInitialState: -> { waiting: false }
   handleBlur: -> FilterAction.revert()
   handleChange: (self) -> ->
     setTimeout (=>
@@ -51,24 +49,34 @@ module.exports = React.createClass
   mixins: [UITheme, Navigation]
   getInitialState: ->
     isLoggedIn: no
+
   componentWillMount: ->
     UserStore.listen (event) =>
-      switch (event.name)
-        when 'status'
-          @setState { isLoggedIn: event.value is 'connected' }
+      switch event
+        when 'hub_login_success'
+          @setState { isLoggedIn: true }
+        when 'hub_logout_success'
+          @setState { isLoggedIn: false }
+
   render: ->
     <div className="row title navbar">
-      <div className="four columns navbar-search">
-        <SearchBar />
-      </div>
-      <div className="four columns navbar-menu">
-        <UI.Tabs>
-          <UI.Tab label="Latest"
-                  onActive={=> @transitionTo 'home', {}, {filter:'latest'}} />
-          <UI.Tab label="Nearby"
-                  onActive={=> @transitionTo 'home', {}, {filter:'nearby'}} />
-        </UI.Tabs>
-      </div>
+      { if @state.isLoggedIn
+          <div className="four columns navbar-search">
+            <SearchBar />
+          </div>
+      }
+
+      { if @state.isLoggedIn
+          <div className="four columns navbar-menu">
+            <UI.Tabs>
+              <UI.Tab label="Latest"
+                onActive={=> @transitionTo 'home', {}, {filter:'latest'}} />
+              <UI.Tab label="Nearby"
+                onActive={=> @transitionTo 'home', {}, {filter:'nearby'}} />
+            </UI.Tabs>
+          </div>
+      }
+
       <div className="four columns user-menu">
         { if @state.isLoggedIn then <LogoutButton /> else <LoginButton /> }
       </div>

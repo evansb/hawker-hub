@@ -6,7 +6,6 @@ Home       = require './Home'
 SingleFood = require './SingleFood'
 Navbar     = require './Navbar'
 Footer     = require './Footer'
-
 { Route, RouteHandler, NotFoundRoute, DefaultRoute } = Router
 
 HawkerHub = React.createClass
@@ -26,7 +25,7 @@ routes =
     <DefaultRoute handler={Home} />
     <Route name='home' path='/home' handler={Home} />
     <Route name='food' path='/food/:id' handler={SingleFood} />
-    <NotFoundRoute handler={Home}/>
+    <NotFoundRoute handler={Home} />
   </Route>
 
 module.exports =
