@@ -1,37 +1,13 @@
 _       = require 'lodash'
 React   = require 'react'
-Modal   = require 'react-modal'
 UI      = require 'material-ui'
-Colors  = require 'material-ui/lib/styles/colors'
 UITheme = require '../Common/UITheme'
+LabeledButton = require '../Common/LabeledButton'
 FoodCardList = require '../Food/FoodCardList'
-FoodCard = require '../Food/FoodCard'
 AddItem = require '../AddItem'
 { User, UserStore } = require '../../Entity/User'
 { FilterStore, FilterAction } = require '../../Entity/Filter'
 { FoodStore } = require '../../Entity/Food'
-
-AddButton = React.createClass
-  render: ->
-    child =
-      <div className="row button-content">
-        <div className="four columns button-icon">
-          <UI.FontIcon className="material-icons">add</UI.FontIcon>
-        </div>
-        <div className="eight columns button-text">Add Item</div>
-      </div>
-    <UI.FlatButton onClick={@props.onClick} secondary={true} children={child} />
-
-CloseAddButton = React.createClass
-  render: ->
-    child =
-      <div className="row button-content">
-        <div className="four columns button-icon">
-          <UI.FontIcon className="material-icons">close</UI.FontIcon>
-        </div>
-        <div className="eight columns button-text">Close</div>
-      </div>
-    <UI.FlatButton onClick={@props.onClick} secondary={true} children={child} />
 
 module.exports = React.createClass
   mixins: [UITheme]
@@ -46,35 +22,40 @@ module.exports = React.createClass
   componentWillMount: ->
     FilterStore.listen (filter) =>
       @setState { heading: filter.heading() }
-    UserStore.listen (event) =>
-      if event.value? and event.value is 'connected'
-        FilterAction.change {name: 'latest'}
-        @setState { name: User.name, hasLoggedIn: true }
-      if event.value? and event.value is 'logged_out'
-        location.reload()
-        @setState { name: null, hasLoggedIn: false }
+
+    UserStore.listen (e) =>
+      switch e
+        when 'hub_login_success'
+          FilterAction.change { name: 'latest' }
+          @setState { name: User.name, hasLoggedIn: true }
+        when 'hub_logout_success'
+          location.reload()
+          @setState { name: null, hasLoggedIn: false }
+        when 'fb_login_success'
+          @setState { name: User.name }
+
     FoodStore.listen (event) =>
       if event.name is 'created' then @setState { addItemShown: false }
-  showAddItem: (self) -> -> self.setState { addItemShown: true }
-  hideAddItem: (self) -> -> self.setState { addItemShown: false }
+
+  showAddItem: -> @setState { addItemShown: true }
+  hideAddItem: -> @setState { addItemShown: false }
+
   render: ->
     buttonShown =
-      if (@state.hasLoggedIn && !@state.addItemShown)
-        <AddButton onClick={@showAddItem(this)}/>
-      else if (@state.hasLoggedIn)
-        <CloseAddButton onClick={@hideAddItem(this)}/>
-    <div className="limit-width">
+      if !@state.addItemShown
+        <LabeledButton label="Add Item" icon="add" onClick={@showAddItem} />
+      else
+        <LabeledButton label="Close" icon="close" onClick={@hideAddItem} />
+    <div>
       {
         if (@state.hasLoggedIn)
           <div className="row context-bar">
             <div className="ten columns">
               <h1>{@state.heading}</h1>
             </div>
-            <div className="two columns">{buttonShown}</div>
+            <div className="two columns">{ buttonShown }</div>
           </div>
-        else
-          <h1>This is the landing page</h1>
       }
       { if (@state.addItemShown) then <AddItem ref="addItem" /> }
-      { if (@state.hasLoggedIn) then <FoodCardList ref="list" /> }
+      { if (@state.hasLoggedIn) then  <FoodCardList /> }
     </div>

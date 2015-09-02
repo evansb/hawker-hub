@@ -5,10 +5,8 @@ FoodCard = require '../Food/FoodCard'
 
 module.exports = React.createClass
   getInitialState: -> { food: null }
-  contextTypes:
-    router: React.PropTypes.func
   componentWillMount: ->
-    id = @context.router.getCurrentParams().id
+    id = @props.param.id
     SingleFoodStore.listen (food) => @setState { food }
     SingleFoodAction.fetch id
   render: ->

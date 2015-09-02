@@ -149,7 +149,7 @@ module.exports = React.createClass
       $(this).attr('enable', true)
     $(React.findDOMNode(@refs.left)).imagefit
       mode: 'outside'
-      force: 'true'
+      force: false
       halign: 'center'
       valign: 'middle'
     $(React.findDOMNode(@refs.commentBox)).keyup (e) =>

@@ -6,59 +6,97 @@ Collection = require 'ampersand-rest-collection'
 Model      = require 'ampersand-model'
 Reflux     = require 'reflux'
 
-UserAction = Reflux.createActions ['status', 'login', 'logout']
+# Actions pertaining to user
+UserAction = Reflux.createActions [
+  'status',   # Check user login status
+  'login',    # Login to Facebook && HawkerHub
+  'logout',   # Logout from HawkerHub
+  'watch',    # Start watching user locations
+  'stopWatch' # Stop watching user locations
+]
 
-User = { isLoggedIn: false }
+# The singleton user model
+User =
+  name: null
+  isLoggedIn: false
+  latitude: null
+  longitude: null
 
-onSuccessLoc = (pos) ->
-  User.latitude = pos.coords.latitude
-  User.longitude = pos.coords.longitude
-
-onErrorLoc = ->
-
-locOptions =
-  enableHighAccuracy: false
-  timeout: 4000
-  maximumAge: 30000
-
+# User Store as event hub
 UserStore = Reflux.createStore
   listenables: UserAction
 
-  watchUserPosition: ->
-    if (typeof navigator isnt 'undefined')
-      navigator.geolocation.watchPosition(onSuccessLoc, onErrorLoc, locOptions)
+  onWatch: ->
+    onSuccessLoc = (pos) =>
+      User.latitude = pos.coords.latitude
+      User.longitude = pos.coords.longitude
+      @trigger 'location_success'
 
-  fetchUserInfo: ->
-    @watchUserPosition()
+    onErrorLoc = ->
+      @trigger 'location_failure'
+
+    options =
+      enableHighAccuracy: false
+      timeout: 4000
+      maximumAge: 30000
+
+    navigatorSupported = typeof navigator isnt 'undefined'
+    if navigatorSupported
+      navigator.geolocation.watchPosition onSuccessLoc, onErrorLoc, options
+    else
+      onErrorLoc()
+
+  fetchFacebookInfo: ->
     FB.api '/me/?fields=id,name,picture', (response) =>
-      User.id = response.id
+      User.facebookID = response.id
       User.name = response.name
       User.profilePicture = response.picture.data.url
-      @trigger { name: 'status', value: 'connected' }
+      @trigger 'fb_login_success'
 
+  # Login to Facebook, then HawkerHub
   onLogin: ->
     callback = (response) =>
       if (response.status is 'connected')
         url = App.urlFor 'users/login'
+        @fetchFacebookInfo()
         $.ajax
-          type: 'GET'
+          type: 'POST'
           url: url
           success: =>
-            @fetchUserInfo()
-    FB.login callback, { scope: 'publish_actions,user_friends' }
+            User.isLoggedIn = true
+            @trigger 'hub_login_success'
+          error: (e) =>
+            @trigger 'hub_login_failure'
+      else
+        @trigger 'fb_login_failure'
 
+    FB.login callback,
+      scope: 'publish_actions,user_friends'
+
+  # Logout from HawkerHub
   onLogout: () ->
-    FB.logout()
     url = App.urlFor 'users/logout'
     $.ajax
       type: 'GET'
       url: url
-      success: (data) =>
-        @trigger { name: 'status', value: 'logged_out' }
+      success: =>
+        User.isLoggedIn = false
+        @trigger 'hub_logout_success'
+      error: =>
+        @trigger 'hub_logout_failure'
 
+  # Check user status,
   onStatus: ->
     FB.getLoginStatus (response) =>
-      User.isLoggedIn = response.status is 'connected'
-      if (User.isLoggedIn) then @fetchUserInfo()
+      if response.status is 'connected'
+      @fetchFacebookInfo()
+      url = App.urlFor 'users/login'
+      $.ajax
+        type: 'GET'
+        url: url
+        success: (data) =>
+          if data.Status is 'Already logged in.'
+            User.isLoggedIn = true
+            @trigger 'hub_login_success'
 
 module.exports = { UserAction, UserStore, User }
