@@ -67,8 +67,8 @@ HawkerHubLightTheme =
       listItem:
         nestedLevelDepth: 18
       menu:
-        backgroundColor: Colors.white
-        containerBackgroundColor: Colors.white
+        backgroundColor: "rgba(185,43,39,1)"
+        containerBackgroundColor: "rgba(185,43,39,1)"
       menuItem:
         dataHeight: 32
         height: 48

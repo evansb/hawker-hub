@@ -23,12 +23,19 @@ LoginButton = React.createClass
     </div>
 
 LogoutButton = React.createClass
+  handleChange: (e, idx)->
+    if idx is 1 then UserAction.logout()
   render: ->
-    <div className="twelve columns login-div">
-      <a className="login-button" onClick={-> UserAction.logout()}>
-        {User.name}
-      </a>
-    </div>
+    menuItemStyle = { 'text-align': 'right' }
+    underlineStyle = { display: 'none' }
+    iconStyle = { display: 'none' }
+    iconMenuItems = [
+      { payload: '1', text: User.name },
+      { payload: '2', text: 'Logout' }
+    ]
+    <UI.DropDownMenu ref="menu" underlineStyle={underlineStyle}
+                     iconStyle={iconStyle} onChange={@handleChange}
+                     menuItems={iconMenuItems} />
 
 module.exports = React.createClass
   mixins: [UITheme, Navigation]
@@ -52,7 +59,7 @@ module.exports = React.createClass
                   onActive={=> @transitionTo 'home', {}, {filter:'nearby'}} />
         </UI.Tabs>
       </div>
-      <div className="four columns navbar-user-status">
+      <div className="four columns user-menu">
         { if @state.isLoggedIn then <LogoutButton /> else <LoginButton /> }
       </div>
     </div>
