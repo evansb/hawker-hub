@@ -8,7 +8,7 @@ $min-height: 400px
   margin-top: 1em
 
   .likes
-    color: material-color('red', '600')
+    color: #B92B27
 
   .ago
     color: material-color('grey', '400')
@@ -17,6 +17,7 @@ $min-height: 400px
   .left-column, .right-column
     position: relative
     min-height: $min-height
+    max-height: $min-height
 
   .right-column
     padding-right: 1em
@@ -45,14 +46,20 @@ $min-height: 400px
     border-radius: 0
     border-top: 1px solid rgba(0,0,0,0.1)
     width: 100%
-    position: absolute
+    height: 2em
     bottom: 0
     right: 1em
     resize: none
 
-  .comments
-    border-color: black
+  .comment-list
+    ul
+      list-style-type: none
+    li
+      padding-left: 0em
+    li strong
+      color: #B92B27
     overflow-y: auto
+    max-height: 10em
 
   .toolbar
     text-align: right
