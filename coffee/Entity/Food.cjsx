@@ -73,6 +73,7 @@ FoodStore = Reflux.createStore
         crossOrigin: true
         url: url
         success: (data) =>
+          console.log data
           newFood = _.map data, (datum) => new Food datum
           foods.add newFood, { merge: true }
           @trigger { name: 'fetched', value: newFood }
@@ -97,15 +98,26 @@ FoodStore = Reflux.createStore
   onLike: (options) ->
     { itemId, key } = options
     url = App.urlFor "item/#{itemId}/like"
+    model = foods.get itemId
+    model.likes.push
+      user:
+        displayName: User.name
+        providerUserId: User.id
+    @trigger { name: 'changed', model }
     $.ajax
       type: 'POST'
       crossOrigin: true
       url: url
-      success: => @refetch itemId
+      success: =>
+        @refetch itemId
 
   onUnlike: (options) ->
     { itemId, key } = options
     url = App.urlFor "item/#{itemId}/like"
+    model = foods.get itemId
+    model.likes = _.filter model.likes, (like) ->
+      like.user.providerUserId isnt User.id
+    @trigger { name: 'changed', model }  
     $.ajax
       type: 'DELETE'
       crossOrigin: true
