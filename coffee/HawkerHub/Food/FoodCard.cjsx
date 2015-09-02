@@ -38,18 +38,20 @@ InfoHeader = React.createClass
     if @props.likes.length is 0
       result = "0 likes"
     else
-      more = @props.likes.length - samplePeople.length
+      more = @props.likes.length - samplePeople.length - (if userLikeThis then 1 else 0)
       more = if more > 0 then (" and " + more + " other people") else ""
-      if samplePeople.size() <= 0
-        result = "You"
-      else
-        result = ["You"].concat(samplePeople).join(", ")
+      result = if userLikeThis then "You" else ""
+      if samplePeople.size() > 0
+        if result != ""
+          result = [result].concat(samplePeople).join(", ")
+        else
+          result = samplePeople.join(", ")
       result = result + more + " like this"
     <div className="row">
-      <div className="ten columns likes">
+      <div className="nine columns likes">
         {result}
       </div>
-      <div className="two columns ago">
+      <div className="three columns ago">
         {moment(@props.date).fromNow()}
       </div>
     </div>
@@ -82,16 +84,21 @@ Description = React.createClass
   render: -> <UI.CardText> {@props.text} </UI.CardText>
 
 LikeButton = React.createClass
-  handleLike: ->
+  handleLike: (method) ->
     FoodAction.like { itemId: @props.itemId, key: @props.key }
     SingleFoodAction.like @props.itemId
+  handleUnlike: ->
+    FoodAction.unlike { itemId: @props.itemId, key: @props.key }
+    SingleFoodAction.unlike @props.itemId
   render: ->
     iconName = 'favorite_border'
+    handler = @handleLike
     for like in @props.likes
       if like.user.providerUserId is User.id
         iconName = 'favorite'
+        handler = @handleUnlike
         break
-    <Icon name={iconName} onClick={@handleLike} />
+    <Icon name={iconName} onClick={handler} />
 
 ShareButton = React.createClass
   handleClick: ->
@@ -118,21 +125,37 @@ Comments = React.createClass
   mixins: [UITheme]
   render: ->
     comments = _.map @props.comments, (comment, idx) ->
-      <UI.ListItem className="comments-box"
-        secondaryText={ <textarea></textarea> }
-        secondaryTextLines={2} />
-    <UI.List>{comments}</UI.List>
+      <li key={idx}>
+        <strong>{comment.user.displayName}</strong>&nbsp;{comment.message}
+      </li>
+    <div className="comment-list">
+      <ul>{comments}</ul>
+    </div>
 
 module.exports = React.createClass
   mixins: [UITheme]
   handleSubmit: -> @setState { modalIsOpen: false}
   handleCancel: -> @setState { modalIsOpen: false}
+  handleAddComment: ->
+    commentBox = React.findDOMNode @refs.commentBox
+    comment = @refs.commentBox.value
+    $(commentBox).blur().val('').attr('enable', false)
+    FoodAction.addComment
+      itemId: @props.model.itemId
+      value: comment
   componentDidMount: ->
+    commentBox = React.findDOMNode @refs.commentBox
+    $(commentBox).find('textarea').each ->
+      $(this).attr('enable', true)
     $(React.findDOMNode(@refs.left)).imagefit
       mode: 'outside'
-      force: 'true'
+      force: false
       halign: 'center'
       valign: 'middle'
+    $(React.findDOMNode(@refs.commentBox)).keyup (e) =>
+      e = e or event
+      @handleAddComment() if e.keyCode is 13
+      e.preventDefault()
   render: ->
     authorId = @props.model.user.providerUserId
     authorPicture = "https://graph.facebook.com/v2.4/#{authorId}/picture"
@@ -147,9 +170,10 @@ module.exports = React.createClass
                 date={@props.model.addedDate}
                 likes={@props.model.likes}
                 itemId={@props.model.itemId} />
-        <Comments comment={@props.model.comments} />
+        <Comments comments={@props.model.comments} />
         <div className="new-comment">
-          <TextArea minRows={1} placeholder="Add a comment..."></TextArea>
+          <TextArea minRows={1} maxRows={1} ref="commentBox"
+                    placeholder="Add a comment..."></TextArea>
         </div>
       </div>
     </UI.Paper>

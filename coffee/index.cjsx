@@ -1,7 +1,7 @@
 $             = require 'jquery'
 HawkerHub     = require './HawkerHub'
-{UserAction}  = require './Entity/User'
 
+# Setup Facebook API
 require './Entity/Facebook'
 
 # Inject React Tap Event
@@ -12,7 +12,7 @@ injectTapEventPlugin()
 window['jQuery'] = $
 require '../vendor/jquery.imagefit.min'
 
-# Load application entitity.
+# Load application entity.
 require './Entity/App'
 
 # Render the main view.

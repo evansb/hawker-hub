@@ -8,6 +8,7 @@ UITheme    = require '../Common/UITheme'
 Icon       = require '../Common/MaterialIcon'
 TextArea   = require 'react-textarea-autosize'
 {FoodAction} = require '../../Entity/Food'
+{User} = require '../../Entity/User'
 
 ConfirmButton = React.createClass
   mixins: [UITheme]
@@ -30,7 +31,7 @@ module.exports = React.createClass
   imageIsLoaded: (e) ->
     $(React.findDOMNode(this)).imagefit
       mode: 'outside'
-      force: 'true'
+      force: false
       halign: 'center'
       valign: 'middle'
     @setState { imageSrc: e.target.result, inputHasBg: false }
@@ -51,13 +52,12 @@ module.exports = React.createClass
         error: (e) ->
           postImage 'http://hawkerhub.quanyang.me/api/v1/item/photo/ID-100180410.jpg'
     postImage = (photoURL) =>
-      App.withLocation (latitude, longitude) =>
-        FoodAction.create
-          itemName: React.findDOMNode(@refs.foodName).value
-          photoURL: photoURL
-          caption: @refs.caption.value
-          latitude: latitude
-          longtitude: longitude
+      FoodAction.create
+        itemName: React.findDOMNode(@refs.foodName).value
+        photoURL: photoURL
+        caption: @refs.caption.value
+        latitude: User.latitude
+        longtitude: User.longitude
     uploadPhoto()
 
   handleFile: (self) -> (e) ->
@@ -81,7 +81,7 @@ module.exports = React.createClass
                 <input type="text" className="new-food"
                        ref="foodName"
                        style={@getInputStyle()}
-                       placeholder="Food Name..."/>
+                       placeholder="Click to Edit Name..."/>
               </div>
             </div>
           </div>

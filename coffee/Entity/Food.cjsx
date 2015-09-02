@@ -8,7 +8,7 @@ Reflux     = require 'reflux'
 { User }   = require './User'
 
 FoodAction = Reflux.createActions ['create', 'fetch', 'fetchInit',
-  'fetchUser', 'like']
+  'fetchUser', 'like', 'addComment', 'unlike', 'search']
 
 Food = Model.extend
   url: -> App.urlFor 'item'
@@ -33,6 +33,8 @@ Food = Model.extend
 
 foods = new Collection [], { model: Food }
 
+searchContext = null
+
 FoodStore = Reflux.createStore
   listenables: FoodAction
 
@@ -52,7 +54,7 @@ FoodStore = Reflux.createStore
     $.ajax
       type: 'POST'
       dataType: 'json'
-      data: options
+      data: JSON.stringify options
       crossOrigin: true
       url: App.urlFor 'item'
       success: (data) =>
@@ -100,5 +102,40 @@ FoodStore = Reflux.createStore
       crossOrigin: true
       url: url
       success: => @refetch itemId
+
+  onUnlike: (options) ->
+    { itemId, key } = options
+    url = App.urlFor "item/#{itemId}/like"
+    $.ajax
+      type: 'DELETE'
+      crossOrigin: true
+      url: url
+      success: => @refetch itemId
+
+  onAddComment: (options) ->
+    { itemId, value } = options
+    url = App.urlFor "item/#{itemId}/comment"
+    $.ajax
+      type: 'POST'
+      crossOrigin: true
+      dataType: 'json'
+      data: { message: value }
+      url: url
+      success: => @refetch itemId
+
+  onSearch: (options) ->
+    foods = new Collection [], { model: Food }
+    if (foods.length < (options.startAt + options.limit))
+      { latitude, longitude } = User
+      url = App.urlFor 'item/search', options
+      $.ajax
+        type: 'GET'
+        dataType: 'json'
+        crossOrigin: true
+        url: url
+        success: (data) =>
+          newFood = _.map data, (datum) => new Food datum
+          foods.add newFood, { merge: true }
+          @trigger { name: 'fetched', value: newFood }
 
 module.exports = { FoodAction, FoodStore, Food }
