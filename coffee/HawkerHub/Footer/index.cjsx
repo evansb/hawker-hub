@@ -42,7 +42,7 @@ module.exports = React.createClass
             </div>
           </div>
         </div>
-        <div className="row">
+        <div className="row" style={{textAlign:'center'}}>
           <br/>
           &copy; 2015 Proudly crafted by the HawkerHub team.<br/>
           <br/>
