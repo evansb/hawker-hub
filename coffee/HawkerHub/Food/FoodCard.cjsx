@@ -8,6 +8,8 @@ _           = require 'lodash'
 moment      = require 'moment'
 
 { User, UserAction } = require '../../Entity/User'
+{ FoodAction } = require '../../Entity/Food'
+{ SingleFoodAction } = require '../../Entity/SingleFood'
 
 Overlay = React.createClass
   render: -> <h1>{@props.text}</h1>
@@ -27,11 +29,27 @@ Photo = React.createClass
 
 InfoHeader = React.createClass
   render: ->
+    userLikeThis = User.id in _.map @props.likes, (like) -> like.user.providerUserId
+    likes = _.filter @props.likes, (like) -> like.user.providerUserId != User.id
+    samplePeople = _(@props.likes)
+      .filter((like) -> like.user.providerUserId != User.id)
+      .map((like) -> like.user.displayName)
+      .take(3)
+    if @props.likes.length is 0
+      result = "0 likes"
+    else
+      more = @props.likes.length - samplePeople.length
+      more = if more > 0 then (" and " + more + " other people") else ""
+      if samplePeople.size() <= 0
+        result = "You"
+      else
+        result = ["You"].concat(samplePeople).join(", ")
+      result = result + more + " like this"
     <div className="row">
-      <div className="two columns likes">
-        {@props.likes.length} likes
+      <div className="ten columns likes">
+        {result}
       </div>
-      <div className="ten columns ago">
+      <div className="two columns ago">
         {moment(@props.date).fromNow()}
       </div>
     </div>
@@ -52,7 +70,7 @@ Header = React.createClass
           <UI.CardHeader title={@props.name} avatar={@props.avatar} />
         </div>
         <div className="six columns toolbar">
-          <Toolbar itemId={@props.itemId} />
+          <Toolbar itemId={@props.itemId} likes={@props.likes} />
         </div>
       </div>
       <InfoHeader likes={@props.likes} date={@props.date} />
@@ -63,9 +81,17 @@ Description = React.createClass
   mixins: [UITheme]
   render: -> <UI.CardText> {@props.text} </UI.CardText>
 
-LoveButton = React.createClass
+LikeButton = React.createClass
+  handleLike: ->
+    FoodAction.like { itemId: @props.itemId, key: @props.key }
+    SingleFoodAction.like @props.itemId
   render: ->
-    <Icon name="favorite_border" />
+    iconName = 'favorite_border'
+    for like in @props.likes
+      if like.user.providerUserId is User.id
+        iconName = 'favorite'
+        break
+    <Icon name={iconName} onClick={@handleLike} />
 
 ShareButton = React.createClass
   handleClick: ->
@@ -77,7 +103,6 @@ ShareButton = React.createClass
         console.log('Posting completed.');
       else
         console.log('Error while posting.');
-
   render: ->
     <Icon name="share" onClick={@handleClick} />
 
@@ -85,7 +110,7 @@ Toolbar = React.createClass
   mixins: [UITheme]
   render: ->
     <UI.CardActions>
-      <LoveButton itemId={@props.itemId }/>
+      <LikeButton itemId={@props.itemId } likes={@props.likes} />
       <ShareButton itemId={@props.itemId} />
     </UI.CardActions>
 
@@ -100,8 +125,6 @@ Comments = React.createClass
 
 module.exports = React.createClass
   mixins: [UITheme]
-  getInitialState: ->
-    modalIsOpen: false
   handleSubmit: -> @setState { modalIsOpen: false}
   handleCancel: -> @setState { modalIsOpen: false}
   componentDidMount: ->
