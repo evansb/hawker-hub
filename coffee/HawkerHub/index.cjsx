@@ -31,5 +31,5 @@ routes =
 
 module.exports =
   render: (el) ->
-    Router.run routes, Router.HistoryLocation, (Handler, state) ->
+    Router.run routes, (Handler, state) ->
       React.render <Handler query={state.query} />, el

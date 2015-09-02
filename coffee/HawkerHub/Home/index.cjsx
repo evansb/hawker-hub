@@ -29,9 +29,7 @@ CloseAddButton = React.createClass
         <div className="four columns button-icon">
           <UI.FontIcon className="material-icons">close</UI.FontIcon>
         </div>
-        <div className="eight columns button-text">
-          Close
-        </div>
+        <div className="eight columns button-text">Close</div>
       </div>
     <UI.FlatButton onClick={@props.onClick} secondary={true} children={child} />
 
@@ -44,13 +42,13 @@ module.exports = React.createClass
     hasLoggedIn: false
   componentWillReceiveProps: (nextProps) ->
     sameFilter = @props.query.filter is nextProps.query.filter
-    if (not sameFilter) then FilterAction.change nextProps.query.filter
+    if (not sameFilter) then FilterAction.change { name: nextProps.query.filter }
   componentWillMount: ->
     FilterStore.listen (filter) =>
       @setState { heading: filter.heading() }
     UserStore.listen (event) =>
       if event.value? and event.value is 'connected'
-        FilterAction.change 'latest'
+        FilterAction.change {name: 'latest'}
         @setState { name: User.name, hasLoggedIn: true }
       if event.value? and event.value is 'logged_out'
         location.reload()

@@ -5,13 +5,23 @@ UI            = require 'material-ui'
 Image         = require 'react-retina-image'
 UITheme       = require '../Common/UITheme'
 Icon          = require '../Common/MaterialIcon'
-{ Filter, FilterAction } = require '../../Entity/Filter'
+{ FilterAction } = require '../../Entity/Filter'
 { UserStore, UserAction, User } = require '../../Entity/User'
 
 SearchBar = React.createClass
+  getInitialState: ->
+    waiting: false
+  handleBlur: -> FilterAction.revert()
+  handleChange: (self) -> ->
+    setTimeout (=>
+      FilterAction.change {name: 'search', arg: self.refs.term.getValue() }
+      self.setState { waiting: false }
+    ), 500
+    self.setState { waiting: true }
   render: ->
     <div className="search-bar">
-      <UI.TextField hintText="Search HawkerHub" />
+      <UI.TextField hintText="Search HawkerHub" ref="term"
+                    onBlur={@handleBlur} onChange={@handleChange(this)} />
     </div>
 
 LoginButton = React.createClass
