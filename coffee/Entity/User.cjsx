@@ -43,7 +43,8 @@ UserStore = Reflux.createStore
         $.ajax
           type: 'GET'
           url: url
-          success: => @fetchUserInfo()
+          success: =>
+            @fetchUserInfo()
     FB.login callback, { scope: 'publish_actions,user_friends' }
 
   onLogout: () ->
@@ -58,6 +59,6 @@ UserStore = Reflux.createStore
   onStatus: ->
     FB.getLoginStatus (response) =>
       User.isLoggedIn = response.status is 'connected'
-      if (User.isLoggedIn) then @fetchUserInfo() else @onLogin()
+      if (User.isLoggedIn) then @fetchUserInfo()
 
 module.exports = { UserAction, UserStore, User }
