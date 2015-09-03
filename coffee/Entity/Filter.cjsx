@@ -9,7 +9,7 @@ Latest = ->
   init: ->
     FoodAction.fetchInit { orderBy: 'date', startAt:0, limit: 3 }
   fn: (startAt) ->
-    FoodAction.fetchInit { orderBy: 'date', startAt, limit: 3 }
+    FoodAction.fetch { orderBy: 'date', startAt, limit: 3 }
 
 Nearby = ->
   heading: () -> "Food Nearby"
@@ -27,7 +27,19 @@ Search = (keyword) ->
   init: ->
     FoodAction.search { keyword, orderBy: 'date', startAt:0, limit: 100 }
 
-mapping = { 'latest': Latest, 'recent': Latest, 'nearby': Nearby, 'search':Search }
+Single = (itemId) ->
+  heading: -> ""
+  init: ->
+    console.log itemId
+    FoodAction.fetchOne itemId
+
+mapping =
+  'latest': Latest,
+  'recent': Latest,
+  'nearby': Nearby,
+  'search': Search,
+  'single': Single
+
 current = null
 
 FilterStore = Reflux.createStore

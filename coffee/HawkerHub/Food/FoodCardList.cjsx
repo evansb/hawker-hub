@@ -61,7 +61,7 @@ module.exports = React.createClass
         <ShowMore onClick={=> @setState { isInfiniteLoading: true} }/>
     <div className="limit-width food-card-container">
       <InfiniteScroll loadMore={@handleInfiniteLoad}
-                      hasMore={true} loader={loader}
+                      hasMore={!@props.singleView} loader={loader}
                       threshold={100}>
         {items}
       </InfiniteScroll>

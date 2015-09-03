@@ -54,8 +54,8 @@
   "homepage": "https://github.com/cs3216-quake/hawker-hub",
   "dependencies": {
     "ampersand-app": "^1.0.4",
+    "ampersand-collection": "^1.4.5",
     "ampersand-model": "^5.0.3",
-    "ampersand-rest-collection": "^4.0.0",
     "jquery": "^2.1.4",
     "lodash": "^3.10.1",
     "material-ui": "^0.10.4",

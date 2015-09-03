@@ -140,6 +140,7 @@ module.exports = React.createClass
     commentBox = React.findDOMNode @refs.commentBox
     comment = @refs.commentBox.value
     $(commentBox).blur().val('').attr('enable', false)
+    console.log @props.model.itemId
     FoodAction.addComment
       itemId: @props.model.itemId
       value: comment
@@ -147,11 +148,6 @@ module.exports = React.createClass
     commentBox = React.findDOMNode @refs.commentBox
     $(commentBox).find('textarea').each ->
       $(this).attr('enable', true)
-    $(React.findDOMNode(@refs.left)).imagefit
-      mode: 'outside'
-      force: false
-      halign: 'center'
-      valign: 'middle'
     $(React.findDOMNode(@refs.commentBox)).keyup (e) =>
       e = e or event
       @handleAddComment() if e.keyCode is 13

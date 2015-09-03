@@ -2,7 +2,7 @@ $          = require 'jquery'
 _          = require 'lodash'
 URL        = require 'url'
 App        = require 'ampersand-app'
-Collection = require 'ampersand-rest-collection'
+Collection = require 'ampersand-collection'
 Model      = require 'ampersand-model'
 Reflux     = require 'reflux'
 
@@ -99,7 +99,7 @@ UserStore = Reflux.createStore
             if data.Status is 'Already logged in.'
               User.isLoggedIn = true
               @fetchFacebookInfo => @trigger 'hub_login_success'
-            else    
+            else
               @fetchFacebookInfo => @trigger 'fb_login_success'
 
 module.exports = { UserAction, UserStore, User }

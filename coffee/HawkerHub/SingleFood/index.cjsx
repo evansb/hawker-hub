@@ -1,15 +1,10 @@
 _       = require 'lodash'
 React   = require 'react'
-FoodCard = require '../Food/FoodCard'
-{ SingleFoodStore, SingleFoodAction } = require '../../Entity/SingleFood'
+FoodCardList = require '../Food/FoodCardList'
+{ FilterAction } = require '../../Entity/Filter'
 
 module.exports = React.createClass
-  getInitialState: -> { food: null }
-  componentWillMount: ->
-    id = @props.params.id
-    SingleFoodStore.listen (food) => @setState { food }
-    SingleFoodAction.fetch id
+  componentDidMount: ->
+    FilterAction.change { name: 'single', arg: @props.params.id }
   render: ->
-    <div className="container single-food">
-      { if (@state.food) then <FoodCard model={@state.food} /> }
-    </div>
+    <FoodCardList />

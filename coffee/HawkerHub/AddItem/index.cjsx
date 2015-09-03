@@ -31,7 +31,7 @@ module.exports = React.createClass
   imageIsLoaded: (e) ->
     $(React.findDOMNode(this)).imagefit
       mode: 'outside'
-      force: false
+      force: true
       halign: 'center'
       valign: 'middle'
     @setState { imageSrc: e.target.result, inputHasBg: false }

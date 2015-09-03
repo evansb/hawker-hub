@@ -37,7 +37,7 @@ HomeorLanding = React.createClass
   render: ->
     <div>
     { if @state.hasLoggedIn
-        <Home />
+        <Home params={@props.params} />
       else
         <Landing fbLogin={@state.fbLogin} /> }
     </div>
@@ -46,7 +46,7 @@ routes =
   <Route name='app' path='/' handler={HawkerHub}>
     <DefaultRoute handler={HomeorLanding} />
     <Route name='home' path='/home' handler={HomeorLanding} />
-    <Route name='food' path='/food/:id' handler={SingleFood} />
+    <Route name='food' path='/food/:id' handler={HomeorLanding} />
     <NotFoundRoute handler={Landing} />
   </Route>
 
