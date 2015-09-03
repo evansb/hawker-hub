@@ -104,7 +104,7 @@ ShareButton = React.createClass
   handleClick: ->
     config =
       method: 'share',
-      href: "http://#{API_HOST}/#/food/#{@props.itemId}"
+      href: "http://#{API_HOST}/food/#{@props.itemId}"
     FB.ui config, (response) ->
       if (response && !response.error_code)
         console.log('Posting completed.');
