@@ -46,27 +46,28 @@ UserStore = Reflux.createStore
     else
       onErrorLoc()
 
-  fetchFacebookInfo: ->
+  fetchFacebookInfo: (next) ->
     FB.api '/me/?fields=id,name,picture', (response) =>
-      User.facebookID = response.id
+      User.id = response.id
       User.name = response.name
       User.profilePicture = response.picture.data.url
-      @trigger 'fb_login_success'
+      next()
 
   # Login to Facebook, then HawkerHub
   onLogin: ->
     callback = (response) =>
       if (response.status is 'connected')
         url = App.urlFor 'users/login'
-        @fetchFacebookInfo()
-        $.ajax
-          type: 'POST'
-          url: url
-          success: =>
-            User.isLoggedIn = true
-            @trigger 'hub_login_success'
-          error: (e) =>
-            @trigger 'hub_login_failure'
+        @fetchFacebookInfo =>
+          @trigger 'fb_login_success'
+          $.ajax
+            type: 'POST'
+            url: url
+            success: =>
+              User.isLoggedIn = true
+              @trigger 'hub_login_success'
+            error: (e) =>
+              @trigger 'hub_login_failure'
       else
         @trigger 'fb_login_failure'
 
@@ -89,14 +90,16 @@ UserStore = Reflux.createStore
   onStatus: ->
     FB.getLoginStatus (response) =>
       if response.status is 'connected'
-      @fetchFacebookInfo()
-      url = App.urlFor 'users/login'
-      $.ajax
-        type: 'GET'
-        url: url
-        success: (data) =>
-          if data.Status is 'Already logged in.'
-            User.isLoggedIn = true
-            @trigger 'hub_login_success'
+        @trigger 'fb_login_success'
+        url = App.urlFor 'users/login'
+        $.ajax
+          type: 'GET'
+          url: url
+          success: (data) =>
+            if data.Status is 'Already logged in.'
+              User.isLoggedIn = true
+              @fetchFacebookInfo => @trigger 'hub_login_success'
+            else    
+              @fetchFacebookInfo => @trigger 'fb_login_success'
 
 module.exports = { UserAction, UserStore, User }

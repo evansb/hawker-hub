@@ -1,13 +1,5 @@
+Reflux       = require 'reflux'
 {UserAction} = require './User'
-
-window.fbAsyncInit = ->
-  FB.init
-    appId: '1466024120391100'
-    version: 'v2.4'
-    xfbml: true
-    cookie: true
-  UserAction.status()
-  FB.XFBML.parse()
 
 initFB = (d, s, id) ->
   fjs = d.getElementsByTagName(s)[0]
@@ -17,4 +9,16 @@ initFB = (d, s, id) ->
   js.src = '//connect.facebook.net/en_US/sdk.js'
   fjs.parentNode.insertBefore js, fjs
 
-initFB(document, 'script', 'facebook-jssdk')
+FacebookStore = Reflux.createStore
+  init: ->
+    window.fbAsyncInit = =>
+      FB.init
+        appId: '1466024120391100'
+        version: 'v2.4'
+        xfbml: true
+        cookie: true  
+      FB.XFBML.parse()
+      @trigger 'ready'
+    initFB(document, 'script', 'facebook-jssdk')
+
+module.exports = { FacebookStore }

@@ -6,10 +6,10 @@ FoodCard = require '../Food/FoodCard'
 module.exports = React.createClass
   getInitialState: -> { food: null }
   componentWillMount: ->
-    id = @props.param.id
+    id = @props.params.id
     SingleFoodStore.listen (food) => @setState { food }
     SingleFoodAction.fetch id
   render: ->
-    <div className="single-food">
+    <div className="container single-food">
       { if (@state.food) then <FoodCard model={@state.food} /> }
     </div>

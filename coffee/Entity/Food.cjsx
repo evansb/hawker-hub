@@ -32,6 +32,7 @@ Food = Model.extend
       fn: -> @itemName
 
 foods = new Collection [], { model: Food }
+ajaxQueue = {}
 
 searchContext = null
 
@@ -48,7 +49,11 @@ FoodStore = Reflux.createStore
       success: (data) =>
         newFood = new Food data
         foods.add newFood, { merge: true }
-        @trigger { name: 'changed', model: newFood }
+        if ajaxQueue[itemId] is 1
+          ajaxQueue[itemId] -= 1
+          @trigger { name: 'changed', model: newFood }
+        else
+          ajaxQueue[itemId] -= 1
 
   onCreate: (options) ->
     $.ajax
@@ -97,15 +102,30 @@ FoodStore = Reflux.createStore
   onLike: (options) ->
     { itemId, key } = options
     url = App.urlFor "item/#{itemId}/like"
+    model = foods.get itemId
+    model.likes.push
+      user:
+        displayName: User.name
+        providerUserId: User.id
+    foods.add model, { merge: true }
+    @trigger { name: 'changed', model }
+    ajaxQueue[itemId] = (ajaxQueue[itemId] or 0) + 1;
     $.ajax
       type: 'POST'
       crossOrigin: true
       url: url
-      success: => @refetch itemId
+      success: =>
+        @refetch itemId
 
   onUnlike: (options) ->
     { itemId, key } = options
     url = App.urlFor "item/#{itemId}/like"
+    model = foods.get itemId
+    model.likes = _.filter model.likes, (like) ->
+      like.user.providerUserId isnt User.id
+    foods.add model, { merge: true }
+    @trigger { name: 'changed', model }
+    ajaxQueue[itemId] = (ajaxQueue[itemId] or 0) + 1;
     $.ajax
       type: 'DELETE'
       crossOrigin: true
@@ -115,6 +135,15 @@ FoodStore = Reflux.createStore
   onAddComment: (options) ->
     { itemId, value } = options
     url = App.urlFor "item/#{itemId}/comment"
+    model = foods.get itemId
+    model.comments.push
+      user:
+        displayName: User.name
+        providerUserId: User.id
+      message: value
+    foods.add model, { merge: true }
+    @trigger { name: 'changed', model }
+    ajaxQueue[itemId] = (ajaxQueue[itemId] or 0) + 1;
     $.ajax
       type: 'POST'
       crossOrigin: true

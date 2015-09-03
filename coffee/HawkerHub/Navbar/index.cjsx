@@ -33,12 +33,18 @@ LoginButton = React.createClass
 LogoutButton = React.createClass
   handleChange: (e, idx)->
     if idx is 1 then UserAction.logout()
+  getInitialState: -> name: User.name
+  componentWillMount: ->
+    UserStore.listen (event) =>
+      switch event
+        when 'hub_login_success'
+          @setState { name: User.name }
   render: ->
-    menuItemStyle = { 'text-align': 'right' }
+    menuItemStyle = { 'textAlign': 'right' }
     underlineStyle = { display: 'none' }
     iconStyle = { display: 'none' }
     iconMenuItems = [
-      { payload: '1', text: User.name },
+      { payload: '1', text: @state.name },
       { payload: '2', text: 'Logout' }
     ]
     <UI.DropDownMenu ref="menu" underlineStyle={underlineStyle}
@@ -47,9 +53,7 @@ LogoutButton = React.createClass
 
 module.exports = React.createClass
   mixins: [UITheme, Navigation]
-  getInitialState: ->
-    isLoggedIn: no
-
+  getInitialState: -> { isLoggedIn: false }
   componentWillMount: ->
     UserStore.listen (event) =>
       switch event
@@ -57,7 +61,6 @@ module.exports = React.createClass
           @setState { isLoggedIn: true }
         when 'hub_logout_success'
           @setState { isLoggedIn: false }
-
   render: ->
     <div className="row title navbar">
       { if @state.isLoggedIn
@@ -78,6 +81,6 @@ module.exports = React.createClass
       }
 
       <div className="four columns user-menu">
-        { if @state.isLoggedIn then <LogoutButton /> else <LoginButton /> }
+        { if @state.isLoggedIn then <LogoutButton /> }
       </div>
     </div>
