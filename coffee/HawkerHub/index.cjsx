@@ -36,7 +36,7 @@ HomeorLanding = React.createClass
   render: ->
     <div>
     { if @state.hasLoggedIn
-        <Home params={@props.params} />
+        <Home params={@props.params} query={@props.query} />
       else
         <Landing fbLogin={@state.fbLogin} /> }
     </div>
