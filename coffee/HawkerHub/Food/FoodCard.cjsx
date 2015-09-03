@@ -134,8 +134,6 @@ Comments = React.createClass
 
 module.exports = React.createClass
   mixins: [UITheme]
-  handleSubmit: -> @setState { modalIsOpen: false}
-  handleCancel: -> @setState { modalIsOpen: false}
   handleAddComment: ->
     commentBox = React.findDOMNode @refs.commentBox
     comment = @refs.commentBox.value
