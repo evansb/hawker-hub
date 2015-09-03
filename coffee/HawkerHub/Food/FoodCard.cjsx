@@ -12,8 +12,6 @@ moment      = require 'moment'
 { SingleFoodAction } = require '../../Entity/SingleFood'
 
 Photo = React.createClass
-  style:
-    'background-image': "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))"
   render: ->
      <div>
        <div className="photo">
