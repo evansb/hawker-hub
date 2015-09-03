@@ -6,7 +6,7 @@ FoodCard = require '../Food/FoodCard'
 module.exports = React.createClass
   getInitialState: -> { food: null }
   componentWillMount: ->
-    id = @props.param.id
+    id = @props.params.id
     SingleFoodStore.listen (food) => @setState { food }
     SingleFoodAction.fetch id
   render: ->

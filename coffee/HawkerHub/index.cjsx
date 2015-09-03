@@ -7,22 +7,47 @@ SingleFood = require './SingleFood'
 Navbar     = require './Navbar'
 Footer     = require './Footer'
 Landing    = require './Landing'
+{ UserStore, UserAction } = require '../Entity/User'
+{ FacebookStore } = require '../Entity/Facebook'
 { Route, RouteHandler, NotFoundRoute, DefaultRoute } = Router
 
 HawkerHub = React.createClass
   render: ->
     <div>
+      <header><Navbar /></header>
       <RouteHandler {...@props} />
       <Footer />
     </div>
 
+HomeorLanding = React.createClass
+  getInitialState: ->
+    hasLoggedIn: false
+    fbLogin: false
+  componentWillMount: ->
+    UserStore.listen (e) =>
+      switch e
+        when 'fb_login_success'
+          @setState { fbLogin: true }
+        when 'hub_login_success'
+          @setState { hasLoggedIn: true }
+        when 'hub_logout_success'
+          @setState { hasLoggedIn: false }
+    FacebookStore.listen (e) =>
+      if e is 'ready' then UserAction.status()
+  render: ->
+    <div>
+    { if @state.hasLoggedIn
+        <Home />
+      else
+        <Landing fbLogin={@state.fbLogin} /> }
+    </div>
+
 routes =
   <Route name='app' path='/' handler={HawkerHub}>
-    <DefaultRoute handler={Home} />
-    <Route name='home' path='/home' handler={Home} />
-    <Route name='landing' path='/landing' handler={Landing} />
+    <DefaultRoute handler={HomeorLanding} />
+    <Route name='home' path='/home' handler={HomeorLanding} />
     <Route name='food' path='/food/:id' handler={SingleFood} />
-    <NotFoundRoute handler={Home} />
+    <NotFoundRoute handler={Landing} />
   </Route>
 
 module.exports =

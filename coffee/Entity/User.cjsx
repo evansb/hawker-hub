@@ -57,9 +57,9 @@ UserStore = Reflux.createStore
   onLogin: ->
     callback = (response) =>
       if (response.status is 'connected')
-        @trigger 'fb_login_success'
         url = App.urlFor 'users/login'
         @fetchFacebookInfo =>
+          @trigger 'fb_login_success'
           $.ajax
             type: 'POST'
             url: url
@@ -99,5 +99,7 @@ UserStore = Reflux.createStore
             if data.Status is 'Already logged in.'
               User.isLoggedIn = true
               @fetchFacebookInfo => @trigger 'hub_login_success'
+            else    
+              @fetchFacebookInfo => @trigger 'fb_login_success'
 
 module.exports = { UserAction, UserStore, User }
