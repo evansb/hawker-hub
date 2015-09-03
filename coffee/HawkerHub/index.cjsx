@@ -6,17 +6,13 @@ Home       = require './Home'
 SingleFood = require './SingleFood'
 Navbar     = require './Navbar'
 Footer     = require './Footer'
+Landing    = require './Landing'
 { Route, RouteHandler, NotFoundRoute, DefaultRoute } = Router
 
 HawkerHub = React.createClass
   render: ->
     <div>
-      <header>
-        <Navbar title={App.title()} />
-      </header>
-      <div className="container">
-        <RouteHandler {...@props} />
-      </div>
+      <RouteHandler {...@props} />
       <Footer />
     </div>
 
@@ -24,6 +20,7 @@ routes =
   <Route name='app' path='/' handler={HawkerHub}>
     <DefaultRoute handler={Home} />
     <Route name='home' path='/home' handler={Home} />
+    <Route name='landing' path='/landing' handler={Landing} />
     <Route name='food' path='/food/:id' handler={SingleFood} />
     <NotFoundRoute handler={Home} />
   </Route>

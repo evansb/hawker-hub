@@ -5,6 +5,7 @@ UITheme = require '../Common/UITheme'
 LabeledButton = require '../Common/LabeledButton'
 FoodCardList = require '../Food/FoodCardList'
 AddItem = require '../AddItem'
+Landing = require '../Landing'
 { User, UserStore } = require '../../Entity/User'
 { FilterStore, FilterAction } = require '../../Entity/Filter'
 { FoodStore } = require '../../Entity/Food'
@@ -46,7 +47,7 @@ module.exports = React.createClass
         <LabeledButton label="Add Item" icon="add" onClick={@showAddItem} />
       else
         <LabeledButton label="Close" icon="close" onClick={@hideAddItem} />
-    <div>
+    <div className="container">
       {
         if (@state.hasLoggedIn)
           <div className="row context-bar">
@@ -57,5 +58,5 @@ module.exports = React.createClass
           </div>
       }
       { if (@state.addItemShown) then <AddItem ref="addItem" /> }
-      { if (@state.hasLoggedIn) then  <FoodCardList /> }
+      { if (@state.hasLoggedIn) then  <FoodCardList />  else <Landing /> }
     </div>
