@@ -11,19 +11,17 @@ moment      = require 'moment'
 { FoodAction } = require '../../Entity/Food'
 { SingleFoodAction } = require '../../Entity/SingleFood'
 
-Overlay = React.createClass
-  render: -> <h1>{@props.text}</h1>
-
 Photo = React.createClass
   style:
     'background-image': "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))"
   render: ->
      <div>
        <div className="photo">
-         <img className="u-full-width" src={@props.src} />
+         <img ref="img" className="u-full-width u-max-full-width u-max-full-height"
+              src={@props.src} />
        </div>
        <div className="overlay">
-        <Overlay text={@props.title} />
+         <h1>{@props.title}</h1>
        </div>
      </div>
 

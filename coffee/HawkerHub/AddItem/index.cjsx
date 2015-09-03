@@ -36,7 +36,8 @@ module.exports = React.createClass
       valign: 'middle'
     @setState { imageSrc: e.target.result, inputHasBg: false }
   getInputStyle: ->
-    background: if (@state.inputHasBg) then 'rgba(255,255,255, 0.1)' else 'none'
+    background: if (@state.inputHasBg) then '#f1f1f1' else 'rgba(0,0,0,0.5)'
+    color: if (!@state.inputHasBg) then 'white' else '#B92B27'
   handleSubmit: (e) ->
     e.preventDefault()
     formData = new FormData()
@@ -77,7 +78,7 @@ module.exports = React.createClass
               <img className="u-max-full-width" src={@state.imageSrc} />
             </div>
             <div className="row">
-              <div className="overlay">
+              <div className="overlay overlay-add-item">
                 <input type="text" className="new-food"
                        ref="foodName"
                        style={@getInputStyle()}
