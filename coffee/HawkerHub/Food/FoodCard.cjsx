@@ -66,10 +66,10 @@ Header = React.createClass
   render: ->
     <div>
       <div className="row">
-        <div className="six columns user">
+        <div className="eight columns user">
           <UI.CardHeader title={@props.name} avatar={@props.avatar} />
         </div>
-        <div className="six columns toolbar">
+        <div className="four columns toolbar">
           <Toolbar itemId={@props.itemId} likes={@props.likes} />
         </div>
       </div>
