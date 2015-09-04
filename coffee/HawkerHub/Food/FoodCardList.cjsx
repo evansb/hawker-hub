@@ -13,9 +13,12 @@ FoodCard = require './FoodCard'
 
 ShowMore = React.createClass
   render: ->
-    <div className="show-more">
-      <Icon onClick={@props.onClick} name="expand_more" />
-    </div>
+    if !@props.hasNoMore
+      <div className="show-more">
+        <Icon onClick={@props.onClick} name="expand_more" />
+      </div>
+    else
+      <div></div>
 
 ProgressBar = React.createClass
   render: ->
@@ -45,13 +48,16 @@ module.exports = React.createClass
         when 'fetched'
           items = @state.items.concat event.value
           @setState { firstTimeFetch: false, items }
+        when 'fetched_search'
+          items = @state.items.concat event.value
+          @setState { firstTimeFetch: false, isInfiniteLoading: false, items, hasNoMore: true }
         when 'created'
           @setState { items: [event.value].concat @state.items }
         when 'changed'
           items = @state.items
           items[event.key] = event.value
           @setState { items }
-        when 'no_more'
+        when 'empty'
           @setState { hasNoMore: true }
   fetch: -> @state.filter.fn @state.items.length
   handleInfiniteLoad: -> if @state.isInfiniteLoading then @fetch()
@@ -59,15 +65,16 @@ module.exports = React.createClass
     items = _.map @state.items, (value, idx) =>
       <FoodCard key={idx} model={value} />
     loader =
-      if (@state.isInfiniteLoading || @state.firstTimeFetch)
+      if (!@state.hasNoMore && (@state.isInfiniteLoading || @state.firstTimeFetch))
         <ProgressBar />
-      else if (not @hasNoMore)
+      else if (!@state.hasNoMore)
         <ShowMore onClick={=> @setState { isInfiniteLoading: true} }/>
       else
-        <div>No more result</div>
+        <div></div>
     <div className="limit-width food-card-container">
       <InfiniteScroll loadMore={@handleInfiniteLoad}
-                      hasMore={!@props.singleView} loader={loader}
+                      hasMore={!@props.singleView && !@state.hasNoMore}
+                      loader={loader}
                       threshold={100}>
         {items}
       </InfiniteScroll>

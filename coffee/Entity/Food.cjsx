@@ -73,9 +73,12 @@ FoodStore = Reflux.createStore
         crossOrigin: true
         url: url
         success: (data) =>
-          newFood = _.map data, (datum) => new Food datum
-          foods.add newFood, { merge: true }
-          @trigger { name: 'fetched', value: newFood }
+          if data.length is 0
+            @trigger { name: 'empty' }
+          else
+            newFood = _.map data, (datum) => new Food datum
+            foods.add newFood, { merge: true }
+            @trigger { name: 'fetched', value: newFood }
 
   onFetchOne: (itemId) ->
     foods = new Collection [], { model: Food }
@@ -93,19 +96,6 @@ FoodStore = Reflux.createStore
   onFetchInit: (options) ->
     foods = new Collection [], { model: Food }
     @onFetch options
-
-  onFetchUser: (userId) ->
-    base = App.urlFor 'users'
-    url = URL.resolve base, '/users/#{userId}/recent'
-    $.ajax
-      type: 'GET'
-      dataType: 'json'
-      crossOrigin: true
-      url: url
-      success: (data) =>
-        newFood = _.map data.data, (datum) => new Food datum
-        foods.add newFood
-        @trigger { name: 'fetched', value: newFood }
 
   onLike: (options) ->
     { itemId, key } = options
@@ -172,6 +162,6 @@ FoodStore = Reflux.createStore
         success: (data) =>
           newFood = _.map data, (datum) => new Food datum
           foods.add newFood, { merge: true }
-          @trigger { name: 'fetched', value: newFood }
+          @trigger { name: 'fetched_search', value: newFood }
 
 module.exports = { FoodAction, FoodStore, Food }
