@@ -156,10 +156,13 @@ module.exports = React.createClass
   handleAddComment: ->
     commentBox = React.findDOMNode @refs.commentBox
     comment = @refs.commentBox.value
-    $(commentBox).blur().val('').attr('enable', false)
-    FoodAction.addComment
-      itemId: @props.model.itemId
-      value: comment
+    if (@refs.commentBox.value.trimLeft().length > 0)
+      $(commentBox).blur().val('').attr('enable', false)
+      FoodAction.addComment
+        itemId: @props.model.itemId
+        value: comment
+    else
+      $(commentBox).blur().val('')
   componentDidMount: ->
     commentBox = React.findDOMNode @refs.commentBox
     $(commentBox).find('textarea').each ->

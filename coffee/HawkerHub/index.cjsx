@@ -6,6 +6,8 @@ Home       = require './Home'
 Navbar     = require './Navbar'
 Footer     = require './Footer'
 Landing    = require './Landing'
+Privacy    = require './Privacy'
+
 { UserStore, UserAction } = require '../Entity/User'
 { FacebookStore } = require '../Entity/Facebook'
 { Route, RouteHandler, NotFoundRoute, DefaultRoute } = Router
@@ -13,7 +15,9 @@ Landing    = require './Landing'
 HawkerHub = React.createClass
   render: ->
     <div>
-      <header><Navbar {...@props} /></header>
+      <header>
+        <Navbar {...@props} />
+      </header>
       <RouteHandler {...@props} />
       <Footer />
     </div>
@@ -35,7 +39,9 @@ HomeorLanding = React.createClass
       if e is 'ready' then UserAction.status()
   render: ->
     <div>
-    { if @state.hasLoggedIn
+    { if (@props.params && @props.params.id is 'privacy')
+        <Privacy />
+      else if @state.hasLoggedIn
         <Home params={@props.params} query={@props.query} />
       else
         <Landing fbLogin={@state.fbLogin} /> }
@@ -45,6 +51,7 @@ routes =
   <Route name='app' path='/' handler={HawkerHub}>
     <DefaultRoute handler={HomeorLanding} />
     <Route name='home' path='/home' handler={HomeorLanding} />
+    <Route name='special' path='/home/:id' handler={HomeorLanding} />
     <Route name='food' path='/food/:id' handler={HomeorLanding} />
     <NotFoundRoute handler={Landing} />
   </Route>

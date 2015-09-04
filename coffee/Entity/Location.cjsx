@@ -5,7 +5,7 @@ Reflux     = require 'reflux'
 LocationAction = Reflux.createActions ['geocode']
 
 key = 'AIzaSyCaW5bu4DFvl_zg69zHVJH2XFJBCD7D76A'
-location_type = 'rooftop'
+location_type = 'rooftop'  
 
 LocationStore = Reflux.createStore
   listenables: LocationAction

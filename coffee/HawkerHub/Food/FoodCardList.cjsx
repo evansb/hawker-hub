@@ -62,7 +62,8 @@ module.exports = React.createClass
   fetch: -> @state.filter.fn @state.items.length
   handleInfiniteLoad: -> if @state.isInfiniteLoading then @fetch()
   render: ->
-    items = _.map @state.items, (value, idx) =>
+    items = _.uniq @state.items, (value) -> value.itemId
+    items = _.map items, (value, idx) =>
       <FoodCard key={idx} model={value} />
     loader =
       if (!@state.hasNoMore && (@state.isInfiniteLoading || @state.firstTimeFetch))

@@ -114,8 +114,9 @@ module.exports = React.createClass
   handleFile: (self) -> (e) ->
     reader = new FileReader()
     file = e.target.files[0]
-    reader.onload = self.imageIsLoaded
-    reader.readAsDataURL file
+    if (typeof file isnt 'undefined')
+      reader.onload = self.imageIsLoaded
+      reader.readAsDataURL file
   redify: (valid) ->
     invalidBorder = { border: '3px solid #B92B27' }
     if !valid then invalidBorder else {}
@@ -143,7 +144,7 @@ module.exports = React.createClass
           <div className='six columns right-column'>
             <TextArea ref="caption" style={@redify(@state.captionValid)}
                       placeholder='Describe more about this menu...'
-                      minRows={3} >
+                      minRows={3} maxLength={255}>
             </TextArea>
             <LocationDetector />
             <div className="row">
