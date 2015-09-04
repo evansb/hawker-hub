@@ -9,7 +9,7 @@ Icon       = require '../Common/MaterialIcon'
 TextArea   = require 'react-textarea-autosize'
 {UserAction} = require '../../Entity/User'
 {FoodAction} = require '../../Entity/Food'
-{User} = require '../../Entity/User'
+{User, UserStore, UserAction} = require '../../Entity/User'
 {LocationStore, LocationAction} = require '../../Entity/Location'
 
 ConfirmButton = React.createClass
@@ -24,13 +24,30 @@ UploadToFB = React.createClass
 
 LocationDetector = React.createClass
   mixins: [UITheme]
+  getInitialState: ->
+    address: 'Unknown Address'
+    locationDetermined: false
+  componentWillMount: ->
+    UserAction.watch (e) ->
+      LocationAction.geocode
+        id: 'addItem'
+        lat: User.latitude
+        long: User.longitude
+    LocationStore.listen (event) =>
+      if event.id is 'addItem' && event.status is 'success'
+        @setState { address: event.address, locationDetermined: true }
+  componentDidMount: -> UserAction.watch()
   render: ->
     <div className="row">
       <div className="one columns">
         <UI.FontIcon className="material-icons">place</UI.FontIcon>
       </div>
       <div className="eleven columns">
-        Detecting your location...
+        { if !(@state.locationDetermined)
+            "Detecting your location..."
+          else
+            @state.address
+        }
       </div>
     </div>
 
@@ -104,7 +121,7 @@ module.exports = React.createClass
           <div className='six columns right-column'>
             <TextArea ref="caption"
                       placeholder='Describe more about this menu...' minRows={3} >
-            </TextArea>  
+            </TextArea>
             <LocationDetector />
             <div className="row">
               <div className="eight columns toggle">

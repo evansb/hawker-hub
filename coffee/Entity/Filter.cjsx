@@ -15,15 +15,13 @@ Latest = ->
 Nearby = ->
   heading: () -> "Food Nearby"
   init: () ->
-    UserAction.watch()
-    UserStore.listen (e) ->
-      if (e is 'location_success') or (e is 'location_failure')
-        FoodAction.fetchInit
-          orderBy: 'location'
-          startAt:0
-          limit: 3
-          latitude: User.latitude
-          longtitude: User.longitude
+    UserAction.watch (latitude, longitude) ->
+      FoodAction.fetchInit
+        orderBy: 'location'
+        startAt:0
+        limit: 3
+        latitude: latitude
+        longtitude: longitude
 
   fn: (startAt) ->
     FoodAction.fetch

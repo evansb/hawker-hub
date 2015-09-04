@@ -39,7 +39,7 @@ module.exports = React.createClass
       FilterAction.change { name: 'single', arg: @props.params.id }
       singleView = true
     else
-      FilterAction.change { name: 'latest' }
+      FilterAction.change { name: (@props.query.filter or 'latest') }
     @setState { singleView }
   showAddItem: -> @setState { addItemShown: true }
   hideAddItem: -> @setState { addItemShown: false }

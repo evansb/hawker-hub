@@ -13,7 +13,7 @@ Landing    = require './Landing'
 HawkerHub = React.createClass
   render: ->
     <div>
-      <header><Navbar /></header>
+      <header><Navbar {...@props} /></header>
       <RouteHandler {...@props} />
       <Footer />
     </div>

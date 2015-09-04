@@ -91,7 +91,6 @@ Header = React.createClass
         </div>
       </div>
       <InfoHeader likes={@props.likes} date={@props.date} />
-      <Caption text={@props.caption} />
     </div>
 
 Description = React.createClass
@@ -136,17 +135,18 @@ Toolbar = React.createClass
       <ShareButton itemId={@props.itemId} />
     </UI.CardActions>
 
-Caption = React.createClass
-  mixins: [UITheme]
-  render: -> <UI.CardText>{@props.text}</UI.CardText>
-
 Comments = React.createClass
   mixins: [UITheme]
   render: ->
-    comments = _.map @props.comments, (comment, idx) ->
-      <li key={idx}>
-        <strong>{comment.user.displayName}</strong>&nbsp;{comment.message}
+    comment =
+      <li key={0}>
+        <strong>{@props.name}</strong>&nbsp;{@props.caption}
       </li>
+    comments = [comment]
+    comments = comments.concat (_.map @props.comments, (comment, idx) ->
+      <li key={idx + 1}>
+        <strong>{comment.user.displayName}</strong>&nbsp;{comment.message}
+      </li>)
     <div className="comment-list">
       <ul>{comments}</ul>
     </div>
@@ -185,7 +185,8 @@ module.exports = React.createClass
                 lat={@props.model.latitude}
                 long={@props.model.longtitude} />
         <Comments comments={@props.model.comments}
-                  name={@props.model.user.displayName} />
+                  name={@props.model.user.displayName}
+                  caption={@props.model.caption} />
         <div className="new-comment">
           <TextArea minRows={1} maxRows={1} ref="commentBox"
                     placeholder="Add a comment..."></TextArea>

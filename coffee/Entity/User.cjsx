@@ -28,10 +28,11 @@ watchId = null
 UserStore = Reflux.createStore
   listenables: UserAction
 
-  onWatch: ->
+  onWatch: (cb) ->
     onSuccessLoc = (pos) =>
       User.latitude = pos.coords.latitude
       User.longitude = pos.coords.longitude
+      if cb then cb(User.latitude, User.longitude)
       @trigger 'location_success'
 
     onErrorLoc = =>

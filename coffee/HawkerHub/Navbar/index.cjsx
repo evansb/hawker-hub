@@ -62,20 +62,21 @@ module.exports = React.createClass
         when 'hub_logout_success'
           @setState { isLoggedIn: false }
   render: ->
+    initialIndex = if @props.query.filter is 'nearby' then 1 else 0
     <div className="row title navbar">
       { if @state.isLoggedIn
           <div className="four columns navbar-search">
             <SearchBar />
           </div>
       }
-
       { if @state.isLoggedIn
           <div className="four columns navbar-menu">
-            <UI.Tabs>
-              <UI.Tab label="Latest"
-                onActive={=> @transitionTo 'home', {}, {filter:'latest'}} />
-              <UI.Tab label="Nearby"
-                onActive={=> @transitionTo 'home', {}, {filter:'nearby'}} />
+            <UI.Tabs initialSelectedIndex={initialIndex}
+                onChange={(v) =>
+                  v = if v is 0 then 'latest' else 'nearby'
+                  @transitionTo 'home',{}, {filter:v}}>
+              <UI.Tab label="Latest" value='latest' />
+              <UI.Tab label="Nearby" value='nearby' />
             </UI.Tabs>
           </div>
       }
