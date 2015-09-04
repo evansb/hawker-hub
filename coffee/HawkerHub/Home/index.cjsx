@@ -35,7 +35,7 @@ module.exports = React.createClass
       if event.name is 'created' then @setState { addItemShown: false }
   componentDidMount: ->
     singleView = false
-    if @props.params && @props.params.id
+    if @props.params && @props.params.id && !@props.params.query
       FilterAction.change { name: 'single', arg: @props.params.id }
       singleView = true
     else

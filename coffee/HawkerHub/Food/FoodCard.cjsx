@@ -7,9 +7,10 @@ $           = require 'jquery'
 _           = require 'lodash'
 moment      = require 'moment'
 
-{ User, UserAction } = require '../../Entity/User'
-{ FoodAction } = require '../../Entity/Food'
-{ SingleFoodAction } = require '../../Entity/SingleFood'
+{ User, UserAction }              = require '../../Entity/User'
+{ FoodAction }                    = require '../../Entity/Food'
+{ LocationAction, LocationStore } = require '../../Entity/Location'
+{ SingleFoodAction }              = require '../../Entity/SingleFood'
 
 Photo = React.createClass
   render: ->
@@ -52,27 +53,45 @@ InfoHeader = React.createClass
       </div>
     </div>
 
-Caption = React.createClass
-  mixins: [UITheme]
-  render: ->
-    <div className="row">
-      <UI.CardText>{@props.text}</UI.CardText>
-    </div>
-
 Header = React.createClass
   mixins: [UITheme]
+  getInitialState: ->
+    location: if (@props.lat && @props.long) then 'View on Map' else 'Unknown'
+    locationValid: (@props.lat && @props.long)
+  componentWillMount: ->
+    LocationStore.listen (event) =>
+      if event.id is @props.itemId && event.status is 'success'
+        @setState { location: event.address, locationValid: true }
+  componentDidMount: ->
+    LocationAction.geocode
+      id: @props.itemId
+      lat: @props.lat
+      long: @props.long
   render: ->
+    mapUrl = "https://www.google.com/maps?q=#{@props.lat},#{@props.long}"
+    if @state.locationValid
+      location = (@state.location).split(',')[0]
+    else
+      location = "Unknown Address"
+
     <div>
       <div className="row">
-        <div className="eight columns user">
-          <UI.CardHeader title={@props.name} avatar={@props.avatar} />
+        <div className="two columns avatar">
+          <UI.Avatar src={@props.avatar} />
+        </div>
+        <div className="six columns user">
+          <div className="row">
+            <strong>{ @props.name }</strong>
+          </div>
+          <div className="row">
+            <a href={mapUrl}>{ (@state.location).split(',')[0] }</a>
+          </div>
         </div>
         <div className="four columns toolbar">
           <Toolbar itemId={@props.itemId} likes={@props.likes} />
         </div>
       </div>
       <InfoHeader likes={@props.likes} date={@props.date} />
-      <Caption text={@props.caption} />
     </div>
 
 Description = React.createClass
@@ -120,10 +139,15 @@ Toolbar = React.createClass
 Comments = React.createClass
   mixins: [UITheme]
   render: ->
-    comments = _.map @props.comments, (comment, idx) ->
-      <li key={idx}>
-        <strong>{comment.user.displayName}</strong>&nbsp;{comment.message}
+    comments = [
+      <li key={0}>
+        <strong>{@props.name}</strong>&nbsp;{@props.caption}
       </li>
+    ]
+    comments = comments.concat (_.map @props.comments, (comment, idx) ->
+      <li key={idx + 1}>
+        <strong>{comment.user.displayName}</strong>&nbsp;{comment.message}
+      </li>)
     <div className="comment-list">
       <ul>{comments}</ul>
     </div>
@@ -134,7 +158,6 @@ module.exports = React.createClass
     commentBox = React.findDOMNode @refs.commentBox
     comment = @refs.commentBox.value
     $(commentBox).blur().val('').attr('enable', false)
-    console.log @props.model.itemId
     FoodAction.addComment
       itemId: @props.model.itemId
       value: comment
@@ -156,11 +179,14 @@ module.exports = React.createClass
       <div className="six columns right-column">
         <Header name={@props.model.user.displayName}
                 avatar={authorPicture}
-                caption={@props.model.caption}
                 date={@props.model.addedDate}
                 likes={@props.model.likes}
-                itemId={@props.model.itemId} />
-        <Comments comments={@props.model.comments} />
+                itemId={@props.model.itemId}
+                lat={@props.model.latitude}
+                long={@props.model.longtitude} />
+        <Comments comments={@props.model.comments}
+                  caption={@props.model.caption}
+                  name={@props.model.user.displayName} />
         <div className="new-comment">
           <TextArea minRows={1} maxRows={1} ref="commentBox"
                     placeholder="Add a comment..."></TextArea>

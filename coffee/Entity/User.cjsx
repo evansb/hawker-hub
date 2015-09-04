@@ -22,6 +22,8 @@ User =
   latitude: null
   longitude: null
 
+watchId = null
+
 # User Store as event hub
 UserStore = Reflux.createStore
   listenables: UserAction
@@ -32,19 +34,25 @@ UserStore = Reflux.createStore
       User.longitude = pos.coords.longitude
       @trigger 'location_success'
 
-    onErrorLoc = ->
+    onErrorLoc = =>
       @trigger 'location_failure'
 
     options =
-      enableHighAccuracy: false
+      enableHighAccuracy: true
       timeout: 4000
       maximumAge: 30000
 
     navigatorSupported = typeof navigator isnt 'undefined'
     if navigatorSupported
-      navigator.geolocation.watchPosition onSuccessLoc, onErrorLoc, options
+      watchId = navigator.geolocation.watchPosition onSuccessLoc, onErrorLoc, options
     else
       onErrorLoc()
+
+  onStopWatch: ->
+    navigatorSupported = typeof navigator isnt 'undefined'
+    if navigatorSupported
+      navigator.geolocation.clearWatch watchId
+      @trigger 'location_cleared'
 
   fetchFacebookInfo: (next) ->
     FB.api '/me/?fields=id,name,picture', (response) =>

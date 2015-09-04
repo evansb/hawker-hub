@@ -7,6 +7,7 @@ UI         = require 'material-ui'
 UITheme    = require '../Common/UITheme'
 Icon       = require '../Common/MaterialIcon'
 TextArea   = require 'react-textarea-autosize'
+{UserAction} = require '../../Entity/User'
 {FoodAction} = require '../../Entity/Food'
 {User} = require '../../Entity/User'
 
@@ -23,7 +24,7 @@ UploadToFB = React.createClass
 module.exports = React.createClass
   mixins: [UITheme]
   getInitialState: ->
-    imageSrc: "../assets/empty-plates.png"
+    imageSrc: "../assets/empty-plates@2x.jpg"
     inputHasBg: true
     dataURI: null
   triggerUpload: ->
@@ -35,6 +36,7 @@ module.exports = React.createClass
       halign: 'center'
       valign: 'middle'
     @setState { imageSrc: e.target.result, inputHasBg: false }
+  componentDidMount: -> UserAction.watch()
   getInputStyle: ->
     background: if (@state.inputHasBg) then '#f1f1f1' else 'rgba(0,0,0,0.5)'
     color: if (!@state.inputHasBg) then 'white' else '#B92B27'
