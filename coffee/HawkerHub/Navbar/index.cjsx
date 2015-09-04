@@ -95,7 +95,7 @@ module.exports = React.createClass
           { if @state.isLoggedIn then <LogoutButton /> }
         </div>
      </div>
-    { if (@props.params && @props.params.id is 'privacy')
-        normalNavbar
-      else
-        <div></div> }
+    if (@props.params && @props.params.id is 'privacy')
+      normalNavbar
+    else
+      <div></div>

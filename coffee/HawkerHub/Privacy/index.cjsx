@@ -3,8 +3,8 @@ React = require 'react'
 module.exports = React.createClass
   render: ->
     <div>
-      <a href="/">Back to App</a>
-      <div className="container">
+      <div className="container">  
+        <a href="/">Back to App</a>
         <h1>Privacy Policy</h1>
         <p>This Privacy Policy describes how users personal information is handled in
           order to engage in the services available on our application. It applies
