@@ -7,8 +7,10 @@ UI         = require 'material-ui'
 UITheme    = require '../Common/UITheme'
 Icon       = require '../Common/MaterialIcon'
 TextArea   = require 'react-textarea-autosize'
+{UserAction} = require '../../Entity/User'
 {FoodAction} = require '../../Entity/Food'
-{User} = require '../../Entity/User'
+{User, UserStore, UserAction} = require '../../Entity/User'
+{LocationStore, LocationAction} = require '../../Entity/Location'
 
 ConfirmButton = React.createClass
   mixins: [UITheme]
@@ -20,10 +22,39 @@ UploadToFB = React.createClass
   render: ->
     <UI.Checkbox name="upload_fb" value="upload_fb" label="Share"/>
 
+LocationDetector = React.createClass
+  mixins: [UITheme]
+  getInitialState: ->
+    address: 'Unknown Address'
+    locationDetermined: false
+  componentWillMount: ->
+    UserAction.watch (e) ->
+      LocationAction.geocode
+        id: 'addItem'
+        lat: User.latitude
+        long: User.longitude
+    LocationStore.listen (event) =>
+      if event.id is 'addItem' && event.status is 'success'
+        @setState { address: event.address, locationDetermined: true }
+  componentDidMount: -> UserAction.watch()
+  render: ->
+    <div className="row">
+      <div className="one columns">
+        <UI.FontIcon className="material-icons">place</UI.FontIcon>
+      </div>
+      <div className="eleven columns">
+        { if !(@state.locationDetermined)
+            "Detecting your location..."
+          else
+            @state.address
+        }
+      </div>
+    </div>
+
 module.exports = React.createClass
   mixins: [UITheme]
   getInitialState: ->
-    imageSrc: "../assets/empty-plates.png"
+    imageSrc: "../assets/empty-plates@2x.jpg"
     inputHasBg: true
     dataURI: null
   triggerUpload: ->
@@ -31,12 +62,14 @@ module.exports = React.createClass
   imageIsLoaded: (e) ->
     $(React.findDOMNode(this)).imagefit
       mode: 'outside'
-      force: false
+      force: true
       halign: 'center'
       valign: 'middle'
     @setState { imageSrc: e.target.result, inputHasBg: false }
+  componentDidMount: -> UserAction.watch()
   getInputStyle: ->
-    background: if (@state.inputHasBg) then 'rgba(255,255,255, 0.1)' else 'none'
+    background: if (@state.inputHasBg) then '#f1f1f1' else 'rgba(0,0,0,0.5)'
+    color: if (!@state.inputHasBg) then 'white' else '#B92B27'
   handleSubmit: (e) ->
     e.preventDefault()
     formData = new FormData()
@@ -77,7 +110,7 @@ module.exports = React.createClass
               <img className="u-max-full-width" src={@state.imageSrc} />
             </div>
             <div className="row">
-              <div className="overlay">
+              <div className="overlay overlay-add-item">
                 <input type="text" className="new-food"
                        ref="foodName"
                        style={@getInputStyle()}
@@ -89,6 +122,7 @@ module.exports = React.createClass
             <TextArea ref="caption"
                       placeholder='Describe more about this menu...' minRows={3} >
             </TextArea>
+            <LocationDetector />
             <div className="row">
               <div className="eight columns toggle">
                 <UI.Toggle name="upload_fb" value="upload_fb"

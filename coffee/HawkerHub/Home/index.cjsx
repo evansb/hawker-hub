@@ -17,6 +17,7 @@ module.exports = React.createClass
     heading: ""
     addItemShown: false
     hasLoggedIn: true
+    singleView: false
   componentWillReceiveProps: (nextProps) ->
     sameFilter = @props.query.filter is nextProps.query.filter
     if (not sameFilter) then FilterAction.change { name: nextProps.query.filter }
@@ -32,10 +33,16 @@ module.exports = React.createClass
           @setState { name: User.name }
     FoodStore.listen (event) =>
       if event.name is 'created' then @setState { addItemShown: false }
-  componentDidMount: -> FilterAction.change { name: 'latest' }
+  componentDidMount: ->
+    singleView = false
+    if @props.params && @props.params.id && !@props.params.query
+      FilterAction.change { name: 'single', arg: @props.params.id }
+      singleView = true
+    else
+      FilterAction.change { name: (@props.query.filter or 'latest') }
+    @setState { singleView }
   showAddItem: -> @setState { addItemShown: true }
   hideAddItem: -> @setState { addItemShown: false }
-
   render: ->
     buttonShown =
       if !@state.addItemShown
@@ -44,7 +51,7 @@ module.exports = React.createClass
         <LabeledButton label="Close" icon="close" onClick={@hideAddItem} />
     <div className="container">
       {
-        if (@state.hasLoggedIn)
+        if (@state.hasLoggedIn && !@state.singleView)
           <div className="row context-bar">
             <div className="ten columns">
               <h1>{@state.heading}</h1>
@@ -53,5 +60,6 @@ module.exports = React.createClass
           </div>
       }
       { if (@state.addItemShown) then <AddItem ref="addItem" /> }
-      { if (@state.hasLoggedIn) then  <FoodCardList /> }
+      { if (@state.hasLoggedIn)
+          <FoodCardList singleView={@state.singleView}/> }
     </div>

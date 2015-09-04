@@ -2,16 +2,17 @@ $          = require 'jquery'
 _          = require 'lodash'
 URL        = require 'url'
 App        = require 'ampersand-app'
-Collection = require 'ampersand-rest-collection'
+Collection = require 'ampersand-collection'
 Model      = require 'ampersand-model'
 Reflux     = require 'reflux'
 { User }   = require './User'
 
-FoodAction = Reflux.createActions ['create', 'fetch', 'fetchInit',
-  'fetchUser', 'like', 'addComment', 'unlike', 'search']
+FoodAction = Reflux.createActions [
+  'create', 'fetch', 'fetchInit', 'fetchUser',
+  'fetchOne', 'like', 'addComment', 'unlike', 'search']
 
 Food = Model.extend
-  url: -> App.urlFor 'item'
+  url: -> App.urlFor "item/#{@itemId}"
   idAttribute: 'itemId'
   props:
     'itemId': 'string'
@@ -19,17 +20,12 @@ Food = Model.extend
     'itemName': 'string'
     'photoURL': 'string'
     'caption': 'string'
-    'longitude': 'any'
     'longtitude': 'any'
     'latitude': 'any'
     'userId': 'string'
     'user': 'object'
     'comments': 'any'
     'likes': 'any'
-  derived:
-    name: ->
-      deps: ['itemName']
-      fn: -> @itemName
 
 foods = new Collection [], { model: Food }
 ajaxQueue = {}
@@ -68,10 +64,9 @@ FoodStore = Reflux.createStore
         @trigger { name: 'created', value: newFood }
 
   onFetch: (options) ->
-    { orderBy, limit, startAt } = options
+    { orderBy, limit, startAt, latitude, longtitude } = options
     if (foods.length < (startAt + limit))
-      { latitude, longitude } = User
-      url = App.urlFor 'item', {orderBy, limit, startAt, latitude, longitude}
+      url = App.urlFor 'item', {orderBy, limit, startAt, latitude, longtitude}
       $.ajax
         type: 'GET'
         dataType: 'json'
@@ -81,6 +76,19 @@ FoodStore = Reflux.createStore
           newFood = _.map data, (datum) => new Food datum
           foods.add newFood, { merge: true }
           @trigger { name: 'fetched', value: newFood }
+
+  onFetchOne: (itemId) ->
+    foods = new Collection [], { model: Food }
+    url = App.urlFor "item/#{itemId}"
+    $.ajax
+      type: 'GET'
+      dataType: 'json'
+      crossOrigin: true
+      url: url
+      success: (data) =>
+        food = new Food data
+        foods.add food
+        @trigger {name: 'fetched', value: [food] }
 
   onFetchInit: (options) ->
     foods = new Collection [], { model: Food }
@@ -155,7 +163,6 @@ FoodStore = Reflux.createStore
   onSearch: (options) ->
     foods = new Collection [], { model: Food }
     if (foods.length < (options.startAt + options.limit))
-      { latitude, longitude } = User
       url = App.urlFor 'item/search', options
       $.ajax
         type: 'GET'

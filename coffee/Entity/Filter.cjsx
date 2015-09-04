@@ -1,5 +1,6 @@
 App = require 'ampersand-app'
 Reflux = require 'reflux'
+{ UserAction, UserStore, User } = require './User'
 { FoodAction } = require './Food'
 
 FilterAction = Reflux.createActions ['change', 'revert']
@@ -9,14 +10,27 @@ Latest = ->
   init: ->
     FoodAction.fetchInit { orderBy: 'date', startAt:0, limit: 3 }
   fn: (startAt) ->
-    FoodAction.fetchInit { orderBy: 'date', startAt, limit: 3 }
+    FoodAction.fetch { orderBy: 'date', startAt, limit: 3 }
 
 Nearby = ->
   heading: () -> "Food Nearby"
   init: () ->
-    FoodAction.fetchInit { orderBy: 'location', startAt:0, limit: 3 }
+    UserAction.watch (latitude, longitude) ->
+      FoodAction.fetchInit
+        orderBy: 'location'
+        startAt:0
+        limit: 3
+        latitude: latitude
+        longtitude: longitude
+
   fn: (startAt) ->
-    FoodAction.fetch { orderBy: 'location', startAt, limit: 3 }
+    FoodAction.fetch
+      orderBy: 'location'
+      startAt: startAt
+      limit: 3
+      latitude: User.latitude
+      longtitude: User.longitude
+
 
 Search = (keyword) ->
   heading: ->
@@ -27,7 +41,17 @@ Search = (keyword) ->
   init: ->
     FoodAction.search { keyword, orderBy: 'date', startAt:0, limit: 100 }
 
-mapping = { 'latest': Latest, 'recent': Latest, 'nearby': Nearby, 'search':Search }
+Single = (itemId) ->
+  heading: -> ""
+  init: -> FoodAction.fetchOne itemId
+
+mapping =
+  'latest': Latest,
+  'recent': Latest,
+  'nearby': Nearby,
+  'search': Search,
+  'single': Single
+
 current = null
 
 FilterStore = Reflux.createStore

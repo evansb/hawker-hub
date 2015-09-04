@@ -30,6 +30,7 @@ module.exports = React.createClass
     isInfiniteLoading: false
     filter: null
     firstTimeFetch: true
+    hasNoMore: false
   componentWillMount: ->
     FilterStore.listen (filter) =>
       filter.init()
@@ -37,6 +38,7 @@ module.exports = React.createClass
         firstTimeFetch: true
         items: []
         filter: filter
+        hasNoMore: false
         isInfiniteLoading: false
     FoodStore.listen (event) =>
       switch event.name
@@ -49,6 +51,8 @@ module.exports = React.createClass
           items = @state.items
           items[event.key] = event.value
           @setState { items }
+        when 'no_more'
+          @setState { hasNoMore: true }
   fetch: -> @state.filter.fn @state.items.length
   handleInfiniteLoad: -> if @state.isInfiniteLoading then @fetch()
   render: ->
@@ -57,11 +61,13 @@ module.exports = React.createClass
     loader =
       if (@state.isInfiniteLoading || @state.firstTimeFetch)
         <ProgressBar />
-      else
+      else if (not @hasNoMore)
         <ShowMore onClick={=> @setState { isInfiniteLoading: true} }/>
+      else
+        <div>No more result</div>
     <div className="limit-width food-card-container">
       <InfiniteScroll loadMore={@handleInfiniteLoad}
-                      hasMore={true} loader={loader}
+                      hasMore={!@props.singleView} loader={loader}
                       threshold={100}>
         {items}
       </InfiniteScroll>

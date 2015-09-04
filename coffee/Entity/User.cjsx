@@ -2,7 +2,7 @@ $          = require 'jquery'
 _          = require 'lodash'
 URL        = require 'url'
 App        = require 'ampersand-app'
-Collection = require 'ampersand-rest-collection'
+Collection = require 'ampersand-collection'
 Model      = require 'ampersand-model'
 Reflux     = require 'reflux'
 
@@ -22,29 +22,38 @@ User =
   latitude: null
   longitude: null
 
+watchId = null
+
 # User Store as event hub
 UserStore = Reflux.createStore
   listenables: UserAction
 
-  onWatch: ->
+  onWatch: (cb) ->
     onSuccessLoc = (pos) =>
       User.latitude = pos.coords.latitude
       User.longitude = pos.coords.longitude
+      if cb then cb(User.latitude, User.longitude)
       @trigger 'location_success'
 
-    onErrorLoc = ->
+    onErrorLoc = =>
       @trigger 'location_failure'
 
     options =
-      enableHighAccuracy: false
+      enableHighAccuracy: true
       timeout: 4000
       maximumAge: 30000
 
     navigatorSupported = typeof navigator isnt 'undefined'
     if navigatorSupported
-      navigator.geolocation.watchPosition onSuccessLoc, onErrorLoc, options
+      watchId = navigator.geolocation.watchPosition onSuccessLoc, onErrorLoc, options
     else
       onErrorLoc()
+
+  onStopWatch: ->
+    navigatorSupported = typeof navigator isnt 'undefined'
+    if navigatorSupported
+      navigator.geolocation.clearWatch watchId
+      @trigger 'location_cleared'
 
   fetchFacebookInfo: (next) ->
     FB.api '/me/?fields=id,name,picture', (response) =>
@@ -99,7 +108,7 @@ UserStore = Reflux.createStore
             if data.Status is 'Already logged in.'
               User.isLoggedIn = true
               @fetchFacebookInfo => @trigger 'hub_login_success'
-            else    
+            else
               @fetchFacebookInfo => @trigger 'fb_login_success'
 
 module.exports = { UserAction, UserStore, User }

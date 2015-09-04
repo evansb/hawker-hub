@@ -7,23 +7,20 @@ $           = require 'jquery'
 _           = require 'lodash'
 moment      = require 'moment'
 
-{ User, UserAction } = require '../../Entity/User'
-{ FoodAction } = require '../../Entity/Food'
-{ SingleFoodAction } = require '../../Entity/SingleFood'
-
-Overlay = React.createClass
-  render: -> <h1>{@props.text}</h1>
+{ User, UserAction }              = require '../../Entity/User'
+{ FoodAction }                    = require '../../Entity/Food'
+{ LocationAction, LocationStore } = require '../../Entity/Location'
+{ SingleFoodAction }              = require '../../Entity/SingleFood'
 
 Photo = React.createClass
-  style:
-    'background-image': "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))"
   render: ->
      <div>
        <div className="photo">
-         <img className="u-full-width" src={@props.src} />
+         <img ref="img" className="u-full-width u-max-full-width u-max-full-height"
+              src={@props.src} />
        </div>
        <div className="overlay">
-        <Overlay text={@props.title} />
+         <h1>{@props.title}</h1>
        </div>
      </div>
 
@@ -56,32 +53,49 @@ InfoHeader = React.createClass
       </div>
     </div>
 
-Caption = React.createClass
-  mixins: [UITheme]
-  render: ->
-    <div className="row">
-      <UI.CardText>{@props.text}</UI.CardText>
-    </div>
-
 Header = React.createClass
   mixins: [UITheme]
+  getInitialState: ->
+    location: if (@props.lat && @props.long) then 'View on Map' else 'Unknown'
+    locationValid: (@props.lat && @props.long)
+  componentWillMount: ->
+    LocationStore.listen (event) =>
+      if event.id is @props.itemId && event.status is 'success'
+        @setState { location: event.address, locationValid: true }
+  componentDidMount: ->
+    LocationAction.geocode
+      id: @props.itemId
+      lat: @props.lat
+      long: @props.long
   render: ->
+    mapUrl = "https://www.google.com/maps?q=#{@props.lat},#{@props.long}"
+    if @state.locationValid
+      location = (@state.location).split(',')[0]
+    else
+      location = "Unknown Address"
     <div>
       <div className="row">
-        <div className="six columns user">
-          <UI.CardHeader title={@props.name} avatar={@props.avatar} />
+        <div className="two columns avatar">
+          <UI.Avatar src={@props.avatar} />
         </div>
-        <div className="six columns toolbar">
+        <div className="six columns user">
+          <div className="row">
+            <strong>{ @props.name }</strong>
+          </div>
+          <div className="row">
+            <a href={mapUrl} target='_blank'>{ location }</a>
+          </div>
+        </div>
+        <div className="four columns toolbar">
           <Toolbar itemId={@props.itemId} likes={@props.likes} />
         </div>
       </div>
       <InfoHeader likes={@props.likes} date={@props.date} />
-      <Caption text={@props.caption} />
     </div>
 
 Description = React.createClass
   mixins: [UITheme]
-  render: -> <UI.CardText> {@props.text} </UI.CardText>
+  render: -> <div className="row caption">{@props.text}</div>
 
 LikeButton = React.createClass
   handleLike: (method) ->
@@ -104,7 +118,7 @@ ShareButton = React.createClass
   handleClick: ->
     config =
       method: 'share',
-      href: "http://#{API_HOST}/#/food/#{@props.itemId}"
+      href: "http://#{API_HOST}/food/#{@props.itemId}"
     FB.ui config, (response) ->
       if (response && !response.error_code)
         console.log('Posting completed.');
@@ -124,18 +138,21 @@ Toolbar = React.createClass
 Comments = React.createClass
   mixins: [UITheme]
   render: ->
-    comments = _.map @props.comments, (comment, idx) ->
-      <li key={idx}>
-        <strong>{comment.user.displayName}</strong>&nbsp;{comment.message}
+    comment =
+      <li key={0}>
+        <strong>{@props.name}</strong>&nbsp;{@props.caption}
       </li>
+    comments = [comment]
+    comments = comments.concat (_.map @props.comments, (comment, idx) ->
+      <li key={idx + 1}>
+        <strong>{comment.user.displayName}</strong>&nbsp;{comment.message}
+      </li>)
     <div className="comment-list">
       <ul>{comments}</ul>
     </div>
 
 module.exports = React.createClass
   mixins: [UITheme]
-  handleSubmit: -> @setState { modalIsOpen: false}
-  handleCancel: -> @setState { modalIsOpen: false}
   handleAddComment: ->
     commentBox = React.findDOMNode @refs.commentBox
     comment = @refs.commentBox.value
@@ -147,11 +164,6 @@ module.exports = React.createClass
     commentBox = React.findDOMNode @refs.commentBox
     $(commentBox).find('textarea').each ->
       $(this).attr('enable', true)
-    $(React.findDOMNode(@refs.left)).imagefit
-      mode: 'outside'
-      force: false
-      halign: 'center'
-      valign: 'middle'
     $(React.findDOMNode(@refs.commentBox)).keyup (e) =>
       e = e or event
       @handleAddComment() if e.keyCode is 13
@@ -166,11 +178,15 @@ module.exports = React.createClass
       <div className="six columns right-column">
         <Header name={@props.model.user.displayName}
                 avatar={authorPicture}
-                caption={@props.model.caption}
                 date={@props.model.addedDate}
                 likes={@props.model.likes}
-                itemId={@props.model.itemId} />
-        <Comments comments={@props.model.comments} />
+                itemId={@props.model.itemId}
+                caption={@props.model.caption}
+                lat={@props.model.latitude}
+                long={@props.model.longtitude} />
+        <Comments comments={@props.model.comments}
+                  name={@props.model.user.displayName}
+                  caption={@props.model.caption} />
         <div className="new-comment">
           <TextArea minRows={1} maxRows={1} ref="commentBox"
                     placeholder="Add a comment..."></TextArea>

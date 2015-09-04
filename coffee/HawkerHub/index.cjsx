@@ -3,7 +3,6 @@ React      = require 'react'
 Router     = require 'react-router'
 App        = require 'ampersand-app'
 Home       = require './Home'
-SingleFood = require './SingleFood'
 Navbar     = require './Navbar'
 Footer     = require './Footer'
 Landing    = require './Landing'
@@ -14,7 +13,7 @@ Landing    = require './Landing'
 HawkerHub = React.createClass
   render: ->
     <div>
-      <header><Navbar /></header>
+      <header><Navbar {...@props} /></header>
       <RouteHandler {...@props} />
       <Footer />
     </div>
@@ -37,7 +36,7 @@ HomeorLanding = React.createClass
   render: ->
     <div>
     { if @state.hasLoggedIn
-        <Home />
+        <Home params={@props.params} query={@props.query} />
       else
         <Landing fbLogin={@state.fbLogin} /> }
     </div>
@@ -46,7 +45,7 @@ routes =
   <Route name='app' path='/' handler={HawkerHub}>
     <DefaultRoute handler={HomeorLanding} />
     <Route name='home' path='/home' handler={HomeorLanding} />
-    <Route name='food' path='/food/:id' handler={SingleFood} />
+    <Route name='food' path='/food/:id' handler={HomeorLanding} />
     <NotFoundRoute handler={Landing} />
   </Route>
 

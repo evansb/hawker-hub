@@ -2,6 +2,7 @@ browserify  = require 'browserify'
 del         = require 'del'
 browserSync = require 'browser-sync'
 gulp        = require 'gulp'
+autoprefixer = require 'gulp-autoprefixer'
 cjsx        = require 'gulp-cjsx'
 coffee      = require 'gulp-coffee'
 lint        = require 'gulp-coffeelint'
@@ -32,6 +33,7 @@ gulp.task 'sass', ->
     .pipe(sass({ style: 'compressed', loadPath: ['./sass'] }))
     .pipe(minifyCSS({ processImport: true, relativeTo: 'sass' }))
     .pipe(rename 'hawker-hub.min.css')
+    .pipe(autoprefixer { browsers: ['last 2 versions'], cascade: false })
     .pipe(gulp.dest('dist'))
 
 gulp.task 'lint', ->
