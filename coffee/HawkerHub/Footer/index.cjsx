@@ -8,11 +8,11 @@ Icon          = require '../Common/MaterialIcon'
 LikeButton = React.createClass
   componentDidMount: ->
   render: ->
-    <div className="fb-like" 
-      data-href="https://www.facebook.com/hawkerhub" 
-      data-layout="button_count" 
-      data-action="like" 
-      data-show-faces="true" 
+    <div className="fb-like"
+      data-href="https://www.facebook.com/hawkerhub"
+      data-layout="button_count"
+      data-action="like"
+      data-show-faces="true"
       data-share="true">
     </div>
 

@@ -45,10 +45,10 @@ InfoHeader = React.createClass
           result = samplePeople.join(", ")
       result = result + more + " like this"
     <div className="row">
-      <div className="nine columns likes">
+      <div className="eight columns likes">
         {result}
       </div>
-      <div className="three columns ago">
+      <div className="four columns ago">
         {moment(@props.date).fromNow()}
       </div>
     </div>
@@ -156,10 +156,13 @@ module.exports = React.createClass
   handleAddComment: ->
     commentBox = React.findDOMNode @refs.commentBox
     comment = @refs.commentBox.value
-    $(commentBox).blur().val('').attr('enable', false)
-    FoodAction.addComment
-      itemId: @props.model.itemId
-      value: comment
+    if (@refs.commentBox.value.trimLeft().length > 0)
+      $(commentBox).blur().val('').attr('enable', false)
+      FoodAction.addComment
+        itemId: @props.model.itemId
+        value: comment
+    else
+      $(commentBox).blur().val('')
   componentDidMount: ->
     commentBox = React.findDOMNode @refs.commentBox
     $(commentBox).find('textarea').each ->
@@ -171,25 +174,27 @@ module.exports = React.createClass
   render: ->
     authorId = @props.model.user.providerUserId
     authorPicture = "https://graph.facebook.com/v2.4/#{authorId}/picture"
-    <UI.Paper zDepth={1} className="row food-card">
-      <div ref="left" className="six columns left-column">
-        <Photo title={@props.model.itemName} src={@props.model.photoURL} />
-      </div>
-      <div className="six columns right-column">
-        <Header name={@props.model.user.displayName}
-                avatar={authorPicture}
-                date={@props.model.addedDate}
-                likes={@props.model.likes}
-                itemId={@props.model.itemId}
-                caption={@props.model.caption}
-                lat={@props.model.latitude}
-                long={@props.model.longtitude} />
-        <Comments comments={@props.model.comments}
-                  name={@props.model.user.displayName}
-                  caption={@props.model.caption} />
-        <div className="new-comment">
-          <TextArea minRows={1} maxRows={1} ref="commentBox"
-                    placeholder="Add a comment..."></TextArea>
+    <div>
+      <UI.Paper zDepth={1} className="row food-card">
+        <div ref="left" className="six columns left-column">
+          <Photo title={@props.model.itemName} src={@props.model.photoURL} />
         </div>
-      </div>
-    </UI.Paper>
+        <div className="six columns right-column">
+          <Header name={@props.model.user.displayName}
+                  avatar={authorPicture}
+                  date={@props.model.addedDate}
+                  likes={@props.model.likes}
+                  itemId={@props.model.itemId}
+                  caption={@props.model.caption}
+                  lat={@props.model.latitude}
+                  long={@props.model.longtitude} />
+          <Comments comments={@props.model.comments}
+                    name={@props.model.user.displayName}
+                    caption={@props.model.caption} />
+          <div className="new-comment">
+            <TextArea minRows={1} maxRows={1} ref="commentBox"
+                      placeholder="Add a comment..."></TextArea>
+          </div>
+        </div>
+      </UI.Paper>
+    </div>

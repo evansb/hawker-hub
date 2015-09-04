@@ -8,7 +8,7 @@ require './Entity/Facebook'
 injectTapEventPlugin = require 'react-tap-event-plugin'
 injectTapEventPlugin()
 
-# Install Imagefit JQuery plugin
+# Install JQuery plugins
 window['jQuery'] = $
 require '../vendor/jquery.imagefit.min'
 

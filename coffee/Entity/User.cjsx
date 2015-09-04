@@ -45,7 +45,7 @@ UserStore = Reflux.createStore
 
     navigatorSupported = typeof navigator isnt 'undefined'
     if navigatorSupported
-      watchId = navigator.geolocation.watchPosition onSuccessLoc, onErrorLoc, options
+      watchId = navigator.geolocation.getCurrentPosition onSuccessLoc, onErrorLoc, options
     else
       onErrorLoc()
 
