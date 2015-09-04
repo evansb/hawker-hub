@@ -10,6 +10,7 @@ TextArea   = require 'react-textarea-autosize'
 {UserAction} = require '../../Entity/User'
 {FoodAction} = require '../../Entity/Food'
 {User} = require '../../Entity/User'
+{LocationStore, LocationAction} = require '../../Entity/Location'
 
 ConfirmButton = React.createClass
   mixins: [UITheme]
@@ -20,6 +21,18 @@ UploadToFB = React.createClass
   mixins: [UITheme]
   render: ->
     <UI.Checkbox name="upload_fb" value="upload_fb" label="Share"/>
+
+LocationDetector = React.createClass
+  mixins: [UITheme]
+  render: ->
+    <div className="row">
+      <div className="one columns">
+        <UI.FontIcon className="material-icons">place</UI.FontIcon>
+      </div>
+      <div className="eleven columns">
+        Detecting your location...
+      </div>
+    </div>
 
 module.exports = React.createClass
   mixins: [UITheme]
@@ -91,7 +104,8 @@ module.exports = React.createClass
           <div className='six columns right-column'>
             <TextArea ref="caption"
                       placeholder='Describe more about this menu...' minRows={3} >
-            </TextArea>
+            </TextArea>  
+            <LocationDetector />
             <div className="row">
               <div className="eight columns toggle">
                 <UI.Toggle name="upload_fb" value="upload_fb"

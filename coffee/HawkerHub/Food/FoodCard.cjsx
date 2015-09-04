@@ -73,7 +73,6 @@ Header = React.createClass
       location = (@state.location).split(',')[0]
     else
       location = "Unknown Address"
-
     <div>
       <div className="row">
         <div className="two columns avatar">
@@ -91,8 +90,8 @@ Header = React.createClass
           <Toolbar itemId={@props.itemId} likes={@props.likes} />
         </div>
       </div>
-      <Caption text={@props.caption} />
       <InfoHeader likes={@props.likes} date={@props.date} />
+      <Caption text={@props.caption} />
     </div>
 
 Description = React.createClass

@@ -20,7 +20,6 @@ Food = Model.extend
     'itemName': 'string'
     'photoURL': 'string'
     'caption': 'string'
-    'longitude': 'any'
     'longtitude': 'any'
     'latitude': 'any'
     'userId': 'string'
@@ -65,10 +64,9 @@ FoodStore = Reflux.createStore
         @trigger { name: 'created', value: newFood }
 
   onFetch: (options) ->
-    { orderBy, limit, startAt } = options
+    { orderBy, limit, startAt, latitude, longtitude } = options
     if (foods.length < (startAt + limit))
-      { latitude, longitude } = User
-      url = App.urlFor 'item', {orderBy, limit, startAt, latitude, longitude}
+      url = App.urlFor 'item', {orderBy, limit, startAt, latitude, longtitude}
       $.ajax
         type: 'GET'
         dataType: 'json'
@@ -165,7 +163,6 @@ FoodStore = Reflux.createStore
   onSearch: (options) ->
     foods = new Collection [], { model: Food }
     if (foods.length < (options.startAt + options.limit))
-      { latitude, longitude } = User
       url = App.urlFor 'item/search', options
       $.ajax
         type: 'GET'

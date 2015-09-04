@@ -28,7 +28,6 @@ LocationStore = Reflux.createStore
         else
           @trigger {id, status: 'failure'}
       error: (e) =>
-        console.log e
         @trigger {id, status: 'failure'}
 
 module.exports = { LocationStore, LocationAction }
