@@ -84,19 +84,20 @@ Header = React.createClass
             <strong>{ @props.name }</strong>
           </div>
           <div className="row">
-            <a href={mapUrl}>{ (@state.location).split(',')[0] }</a>
+            <a href={mapUrl} target='_blank'>{ location }</a>
           </div>
         </div>
         <div className="four columns toolbar">
           <Toolbar itemId={@props.itemId} likes={@props.likes} />
         </div>
       </div>
+      <Caption text={@props.caption} />
       <InfoHeader likes={@props.likes} date={@props.date} />
     </div>
 
 Description = React.createClass
   mixins: [UITheme]
-  render: -> <UI.CardText> {@props.text} </UI.CardText>
+  render: -> <div className="row caption">{@props.text}</div>
 
 LikeButton = React.createClass
   handleLike: (method) ->
@@ -136,18 +137,17 @@ Toolbar = React.createClass
       <ShareButton itemId={@props.itemId} />
     </UI.CardActions>
 
+Caption = React.createClass
+  mixins: [UITheme]
+  render: -> <UI.CardText>{@props.text}</UI.CardText>
+
 Comments = React.createClass
   mixins: [UITheme]
   render: ->
-    comments = [
-      <li key={0}>
-        <strong>{@props.name}</strong>&nbsp;{@props.caption}
-      </li>
-    ]
-    comments = comments.concat (_.map @props.comments, (comment, idx) ->
-      <li key={idx + 1}>
+    comments = _.map @props.comments, (comment, idx) ->
+      <li key={idx}>
         <strong>{comment.user.displayName}</strong>&nbsp;{comment.message}
-      </li>)
+      </li>
     <div className="comment-list">
       <ul>{comments}</ul>
     </div>
@@ -182,10 +182,10 @@ module.exports = React.createClass
                 date={@props.model.addedDate}
                 likes={@props.model.likes}
                 itemId={@props.model.itemId}
+                caption={@props.model.caption}
                 lat={@props.model.latitude}
                 long={@props.model.longtitude} />
         <Comments comments={@props.model.comments}
-                  caption={@props.model.caption}
                   name={@props.model.user.displayName} />
         <div className="new-comment">
           <TextArea minRows={1} maxRows={1} ref="commentBox"
