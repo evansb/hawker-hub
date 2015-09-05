@@ -32,13 +32,12 @@ module.exports = React.createClass
         <div className="row">
           <div className="three columns footer-div">
             <div className="row">
-              <a className="footer-button">Privacy</a>
+              <a className="footer-button" href="/#/home?page=privacy">Privacy</a>
             </div>
             <div className="row">
-              <a className="footer-button">API</a>
-            </div>
-            <div className="row">
-              <a className="footer-button">About Us</a>
+              <a className="footer-button"
+                 target="_blank"
+                 href="http://docs.hawkerhub1.apiary.io/">API</a>
             </div>
           </div>
         </div>

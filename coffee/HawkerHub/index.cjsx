@@ -39,8 +39,8 @@ HomeorLanding = React.createClass
       if e is 'ready' then UserAction.status()
   render: ->
     <div>
-    { if (@props.params && @props.params.id is 'privacy')
-        <Privacy />
+    { if (@props.query && @props.query.page is 'privacy')
+        <Privacy params={@props.params}/>
       else if @state.hasLoggedIn
         <Home params={@props.params} query={@props.query} />
       else
@@ -51,7 +51,6 @@ routes =
   <Route name='app' path='/' handler={HawkerHub}>
     <DefaultRoute handler={HomeorLanding} />
     <Route name='home' path='/home' handler={HomeorLanding} />
-    <Route name='special' path='/home/:id' handler={HomeorLanding} />
     <Route name='food' path='/food/:id' handler={HomeorLanding} />
     <NotFoundRoute handler={Landing} />
   </Route>

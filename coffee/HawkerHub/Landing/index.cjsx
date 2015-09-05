@@ -9,7 +9,9 @@ module.exports = React.createClass
     label = if @props.fbLogin then "Continue Login" else "Login Using Facebook"
     <div className="landing">
       <div className="row container logo">
-        <img width="332px" height="254px" src="../../../assets/landing_centre_image@2x.png" />
+        <img src="../../../assets/landing_logo.png" />
+        <h1>HawkerHub</h1>
+        <h2>Undiscovered local food awaits...</h2>
       </div>
       <div className="row container login">
         { if @props.fbLogin
